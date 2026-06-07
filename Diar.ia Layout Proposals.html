@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<title>Diar.ia — Propostas de Layout</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@300..600&family=JetBrains+Mono:wght@300..600&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    /* Brand palette — Teal (Diar.ia oficial). Sobrescrito pelo TWEAK_DEFAULTS. */
+    --brand:        #00A0A0;
+    --brand-deep:   #00A0A0;
+    --brand-bright: #00A0A0;
+    --brand-tint:   #EBE5D0;
+  }
+  html, body { margin: 0; padding: 0; background: #EBE5D0; }
+  body { font-family: 'Geist', system-ui, sans-serif; color: #171411; }
+  a { color: inherit; text-decoration: none; }
+  button { cursor: pointer; }
+  input { font: inherit; }
+  *, *::before, *::after { box-sizing: border-box; }
+</style>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script src="data.js"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="v1-daily.jsx"></script>
+<script type="text/babel" src="v1-mobile.jsx"></script>
+<script type="text/babel" src="v2-signal.jsx"></script>
+<script type="text/babel" src="v3-issue.jsx"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" data-presets="env,react">
+  const { createRoot } = ReactDOM;
+
+  // Curated palettes. Each entry: [primary, deep, bright, tint].
+  // bright = readable on dark bg (V2). deep = readable on light bg.
+  const PALETTES = {
+    teal:    { label: 'Teal · oficial',  base: '#00A0A0', deep: '#00A0A0', bright: '#00A0A0', tint: '#EBE5D0' },
+    emerald: { label: 'Emerald',         base: '#10b981', deep: '#047857', bright: '#34d399', tint: '#d1fae5' },
+    forest:  { label: 'Forest',          base: '#15803d', deep: '#0a5226', bright: '#4ade80', tint: '#dcfce7' },
+    lime:    { label: 'Lime · signal',   base: '#65a30d', deep: '#3f6212', bright: '#a3e635', tint: '#ecfccb' },
+    moss:    { label: 'Moss',            base: '#3f8c5e', deep: '#1f5a3a', bright: '#74d29c', tint: '#ddf0e4' },
+  };
+
+  const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "palette": "teal"
+  }/*EDITMODE-END*/;
+
+  const ApplyPalette = ({ name }) => {
+    React.useEffect(() => {
+      const p = PALETTES[name] || PALETTES.teal;
+      const r = document.documentElement.style;
+      r.setProperty('--brand', p.base);
+      r.setProperty('--brand-deep', p.deep);
+      r.setProperty('--brand-bright', p.bright);
+      r.setProperty('--brand-tint', p.tint);
+    }, [name]);
+    return null;
+  };
+
+  // Simple mobile shell — status bar + rounded corners. No device-internal
+  // scroll so the full page is visible at once in the artboard.
+  const MobileShell = ({ children }) => (
+    <div style={{
+      width: '100%', minHeight: '100%',
+      borderRadius: 0,
+      overflow: 'hidden', position: 'relative',
+      fontFamily: '-apple-system, system-ui, sans-serif',
+      WebkitFontSmoothing: 'antialiased',
+      background: '#FBFAF6',
+    }}>
+      {/* Status bar */}
+      <div style={{
+        height: 44, padding: '0 24px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        fontFamily: '-apple-system, "SF Pro", system-ui',
+        fontWeight: 590, fontSize: 15, color: '#000',
+        background: '#FBFAF6',
+        position: 'sticky', top: 0, zIndex: 50,
+      }}>
+        <span>9:41</span>
+        <span style={{ display: 'inline-flex', gap: 5, alignItems: 'center' }}>
+          <svg width="16" height="10" viewBox="0 0 19 12" style={{ display: 'block' }}>
+            <rect x="0" y="7.5" width="3.2" height="4.5" rx="0.7" fill="#000"/>
+            <rect x="4.8" y="5" width="3.2" height="7" rx="0.7" fill="#000"/>
+            <rect x="9.6" y="2.5" width="3.2" height="9.5" rx="0.7" fill="#000"/>
+            <rect x="14.4" y="0" width="3.2" height="12" rx="0.7" fill="#000"/>
+          </svg>
+          <svg width="22" height="11" viewBox="0 0 27 13" style={{ display: 'block' }}>
+            <rect x="0.5" y="0.5" width="23" height="12" rx="3.5" stroke="#000" strokeOpacity="0.35" fill="none"/>
+            <rect x="2" y="2" width="20" height="9" rx="2" fill="#000"/>
+            <path d="M25 4.5V8.5C25.8 8.2 26.5 7.2 26.5 6.5C26.5 5.8 25.8 4.8 25 4.5Z" fill="#000" fillOpacity="0.4"/>
+          </svg>
+        </span>
+      </div>
+      <div>{children}</div>
+    </div>
+  );
+
+  const App = () => {
+    const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+    return (
+      <>
+        <ApplyPalette name={t.palette} />
+        <DesignCanvas>
+          <DCSection
+            id="direction-a"
+            title="Direção A · Edição diária"
+            subtitle="Newspaper editorial — desktop + mobile lado a lado. Toggle Tweaks no canto pra trocar paleta."
+          >
+            <DCArtboard id="a-desktop" label="Desktop · 1280px" width={1280} height={3400}>
+              <V1Landing />
+            </DCArtboard>
+            <DCArtboard id="a-mobile" label="Mobile · 375px (iPhone)" width={375} height={3400}>
+              <MobileShell><V1MobileLanding /></MobileShell>
+            </DCArtboard>
+          </DCSection>
+          <DCSection
+            id="alternates"
+            title="Alternativas exploradas"
+            subtitle="Direções B e C — referência, não selecionadas"
+          >
+            <DCArtboard id="v2" label="B · Signal — briefing / monospace" width={1280} height={3400}>
+              <V2Landing />
+            </DCArtboard>
+            <DCArtboard id="v3" label="C · Issue № — magazine" width={1280} height={3600}>
+              <V3Landing />
+            </DCArtboard>
+          </DCSection>
+        </DesignCanvas>
+        <TweaksPanel title="Tweaks · Paleta">
+          <TweakSection label="Cor da marca">
+            <TweakColor
+              label="Paleta"
+              value={PALETTES[t.palette].base}
+              options={Object.values(PALETTES).map((p) => p.base)}
+              onChange={(hex) => {
+                const key = Object.keys(PALETTES).find((k) => PALETTES[k].base === hex);
+                if (key) setTweak('palette', key);
+              }}
+            />
+            <TweakSelect
+              label="Nome"
+              value={t.palette}
+              options={Object.entries(PALETTES).map(([k, p]) => ({ value: k, label: p.label }))}
+              onChange={(v) => setTweak('palette', v)}
+            />
+          </TweakSection>
+        </TweaksPanel>
+      </>
+    );
+  };
+
+  createRoot(document.getElementById('root')).render(<App />);
+</script>
+
+</body>
+</html>

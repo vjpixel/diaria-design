@@ -1,0 +1,6 @@
+/* Diar.ia webfonts — all served from Google Fonts.
+   Georgia    = editorial serif (headlines, emphasis) — system font, no webfont needed.
+   Geist      = neutral sans (body, UI, wordmark).
+   Geist Mono = monospace (kickers, labels, meta).
+   JetBrains Mono = mono fallback / data. */
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@300..600&family=JetBrains+Mono:wght@300..600&display=swap');

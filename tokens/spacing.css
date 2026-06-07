@@ -1,0 +1,40 @@
+/* ============================================================
+   Diar.ia — Spacing, radii, borders, shadows
+   The system is mostly flat and print-like: hairline rules
+   over shadows, generous section padding, pill controls.
+   ============================================================ */
+:root {
+  /* — Spacing scale (px) — */
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   24px;
+  --space-6:   32px;
+  --space-7:   44px;
+  --space-8:   56px;   /* horizontal page gutter (desktop) */
+  --space-9:   72px;
+  --space-10:  88px;   /* large section vertical rhythm */
+
+  /* — Radii — */
+  --radius-none:  0px;
+  --radius-sm:    4px;    /* tags, small tiles, course chips */
+  --radius-md:    6px;    /* images, cards */
+  --radius-lg:    12px;   /* large cards / panels */
+  --radius-pill:  999px;  /* buttons, inputs, chips */
+
+  /* — Borders — */
+  --border-hair:   1px;   /* default hairline */
+  --border-rule:   2px;   /* heavy editorial rule */
+
+  /* — Shadows (used sparingly — this is a flat, paper system) — */
+  --shadow-none: none;
+  --shadow-card: 0 1px 2px rgba(23, 20, 17, 0.04);
+  --shadow-pop:  0 8px 28px rgba(23, 20, 17, 0.12);
+  /* inset edges that give book spines their dimensionality */
+  --shadow-spine: inset -3px 0 0 rgba(0,0,0,0.18), inset 3px 0 0 rgba(255,255,255,0.06);
+
+  /* — Motion — */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --duration-fast: 0.15s;
+}

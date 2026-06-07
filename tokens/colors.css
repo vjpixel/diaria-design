@@ -1,0 +1,47 @@
+/* ============================================================
+   Diar.ia — Color tokens
+   Paleta editorial reduzida a 4 cores-base:
+     ink #171411 · bege #EBE5D0 · papel #FBFAF6 · teal #00A0A0
+   O texto é sempre ink (a hierarquia vem de tamanho/peso, não
+   de cor). O bege é o "tom silencioso": preenche áreas quando
+   é superfície e desenha os fios quando é 1px. Os nomes
+   semânticos foram mantidos — vários apontam para o mesmo
+   valor após a consolidação.
+   ============================================================ */
+:root {
+  /* — Brand: Teal (único acento) — */
+  --brand:          #00A0A0;  /* ponto & .br, links, kickers, marcas */
+  --brand-deep:     #00A0A0;  /* consolidado → brand */
+  --brand-bright:   #00A0A0;  /* consolidado → brand */
+  --brand-tint:     #EBE5D0;  /* preenchimento suave (chips) → bege */
+
+  /* — Ink (todo o texto sobre claro) — */
+  --ink:            #171411;  /* texto, rodapé, botões cheios */
+  --ink-soft:       #171411;  /* consolidado → ink */
+  --ink-faint:      #171411;  /* consolidado → ink */
+  --rule:           #EBE5D0;  /* fios e bordas (hairline) → bege */
+  --rule-strong:    #171411;  /* régua editorial pesada (2px) */
+
+  /* — Paper (superfícies) — */
+  --paper:          #FBFAF6;  /* fundo principal — quase branco quente */
+  --paper-alt:      #EBE5D0;  /* moldura, seções recuadas, boxes cheios */
+  --paper-page:     #EBE5D0;  /* shell do app → bege */
+  --surface-card:   #FBFAF6;  /* cartões = papel + borda bege */
+
+  /* — On-ink (sobre escuro) — */
+  --on-ink:         #FBFAF6;  /* texto sobre ink */
+  --on-ink-soft:    #EBE5D0;  /* secundário sobre ink → bege */
+  --on-ink-faint:   #EBE5D0;  /* meta sobre ink → bege */
+  --rule-on-ink:    rgba(251, 250, 246, 0.18);
+
+  /* — Semantic aliases (prefer these in product code) — */
+  --text-primary:     var(--ink);
+  --text-secondary:   var(--ink);
+  --text-muted:       var(--ink);
+  --text-accent:      var(--brand);
+  --bg-page:          var(--paper);
+  --bg-recessed:      var(--paper-alt);
+  --bg-card:          var(--surface-card);
+  --border-hairline:  var(--rule);
+  --accent:           var(--brand);
+}

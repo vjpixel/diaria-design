@@ -1,0 +1,41 @@
+<!-- @dsCard group="Components" viewport="760x300" name="Caixas · Contorno & Painel" subtitle="Os dois templates de caixa do sistema" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../styles.css" />
+<style>
+  body { margin: 0; background: var(--paper); font-family: var(--font-sans); color: var(--ink); }
+  .wrap { padding: 28px; display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .box { border-radius: 12px; padding: 22px 24px; }
+  /* Template 1 — Contorno */
+  .contorno { background: var(--paper); border: 1px solid var(--rule); }
+  /* Template 2 — Painel */
+  .painel { background: var(--paper-alt); }
+  .kick { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand); margin: 0 0 9px; }
+  .copy { font-size: 14px; line-height: 1.5; color: var(--ink); margin: 0; }
+  .name { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); margin: 14px 0 4px; }
+  .use { font-size: 11px; line-height: 1.4; color: var(--ink); opacity: 0.65; margin: 0; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div>
+      <div class="box contorno">
+        <p class="kick">Por que isso importa</p>
+        <p class="copy">Fundo igual ao papel + uma linha de contorno bege. Leve, recua — o "aparte" editorial.</p>
+      </div>
+      <p class="name">Contorno</p>
+      <p class="use">Papel <code>#FBFAF6</code> + borda <code>#EBE5D0</code> 1px. Uso: "Por que isso importa".</p>
+    </div>
+    <div>
+      <div class="box painel">
+        <p class="kick">É IA?</p>
+        <p class="copy">Preenchido em bege sólido, sem borda. Um módulo fechado, com mais presença.</p>
+      </div>
+      <p class="name">Painel</p>
+      <p class="use">Bege sólido <code>#EBE5D0</code>, sem borda. Usos: enquete, errata, fechamento, patrocínio.</p>
+    </div>
+  </div>
+</body>
+</html>

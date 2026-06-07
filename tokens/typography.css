@@ -1,0 +1,51 @@
+/* ============================================================
+   Diar.ia — Typography tokens
+   Three families. Serif carries the editorial voice (big,
+   tight, with italics for emphasis). Sans is the workhorse.
+   Mono sets kickers/labels in uppercase with wide tracking.
+   ============================================================ */
+:root {
+  /* — Families — */
+  --font-serif: Georgia, 'Times New Roman', serif;
+  --font-sans:  'Geist', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono:  'Geist Mono', 'JetBrains Mono', ui-monospace, monospace;
+
+  /* — Display / heading scale (serif) — */
+  --text-mega:     220px;  /* masthead only */
+  --text-display:  88px;   /* hero / footer statements */
+  --text-h1:       68px;
+  --text-h2:       52px;
+  --text-h3:       32px;
+  --text-h4:       26px;
+  --text-h5:       22px;
+
+  /* — Body & UI (sans) — */
+  --text-lead:     20px;   /* intro paragraphs (often serif italic too) */
+  --text-body:     15px;
+  --text-ui:       13px;   /* buttons, nav, controls */
+  --text-small:    12px;
+
+  /* — Kicker / label (mono) — */
+  --text-kicker:   11px;   /* uppercase, letter-spacing 0.16em */
+  --text-micro:    10px;
+
+  /* — Weights — */
+  --weight-light:    300;
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+
+  /* — Line heights — */
+  --leading-tight:   0.9;   /* display headlines */
+  --leading-snug:    1.1;
+  --leading-normal:  1.25;
+  --leading-relaxed: 1.55;  /* body copy */
+
+  /* — Tracking — */
+  --tracking-mega:   -0.05em;  /* big serif */
+  --tracking-tight:  -0.03em;
+  --tracking-snug:   -0.02em;  /* wordmark */
+  --tracking-kicker:  0.16em;  /* mono uppercase labels */
+  --tracking-meta:    0.08em;
+}

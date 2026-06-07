@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<title>Diar.ia — Logo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --brand: #00A0A0;
+    --ink: #171411;
+    --paper: #FBFAF6;
+    --paperAlt: #ebe5d0;
+  }
+  html, body { margin: 0; padding: 0; }
+  body { background: var(--paper); font-family: 'Geist', system-ui, sans-serif; color: var(--ink); padding: 40px; }
+  .grid { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px; }
+  .row { display: grid; grid-template-columns: 240px 1fr; gap: 24px; align-items: center; }
+  .card {
+    background: #fff; border: 1px solid rgba(23,20,17,0.18); padding: 32px 40px;
+    display: flex; align-items: center; justify-content: center; min-height: 200px;
+    border-radius: 12px;
+  }
+  .card.dark { background: var(--ink); }
+  .card.cream { background: var(--paper); }
+  .meta { font-family: 'Geist Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(23,20,17,0.6); }
+  .meta strong { display: block; font-family: 'Geist', sans-serif; font-size: 16px; letter-spacing: -0.01em; text-transform: none; color: var(--ink); margin-bottom: 6px; }
+  h1 { font-family: 'Geist', sans-serif; font-weight: 600; font-size: 32px; letter-spacing: -0.02em; margin: 0 0 4px; }
+  .sub { font-family: 'Geist', sans-serif; font-size: 14px; color: #171411; margin: 0 0 24px; }
+  hr.rule { border: none; height: 1px; background: rgba(23,20,17,0.18); margin: 24px 0; }
+  .scale-row {
+    display: flex; align-items: center; gap: 40px; flex-wrap: wrap;
+    background: #fff; border: 1px solid rgba(23,20,17,0.18); padding: 40px 32px; border-radius: 12px;
+  }
+  .scale-item { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .scale-item .meta { font-size: 10px; }
+  .downloads {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;
+  }
+  .dl {
+    background: #fff; border: 1px solid rgba(23,20,17,0.18); padding: 16px 18px; border-radius: 8px;
+    text-decoration: none; color: var(--ink); display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px;
+    transition: border-color .15s, background .15s;
+  }
+  .dl:hover { border-color: var(--ink); background: var(--paper); }
+  .dl .name { font-weight: 500; }
+  .dl .ext { font-family: 'Geist Mono', monospace; font-size: 10px; color: var(--brand); letter-spacing: 0.08em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<div class="grid">
+  <header>
+    <h1>Diar.ia · Logo</h1>
+    <p class="sub">Wordmark em alta resolução. SVG vetorial + PNGs em 512 / 1024 / 2048 / 4096 px de largura. Variantes claro, escuro, mono e ícone quadrado.</p>
+  </header>
+
+  <!-- Variantes -->
+  <div class="row">
+    <div class="meta"><strong>Primária</strong>Sobre fundo claro</div>
+    <div class="card">
+      <img src="logo/png/logo-2048.png?v=3" style="width: 100%; max-width: 760px; display: block; height: auto" alt="" />
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="meta"><strong>Invertida</strong>Sobre fundo escuro</div>
+    <div class="card dark">
+      <img src="logo/png/logo-dark-2048.png?v=3" style="width: 100%; max-width: 760px; display: block; height: auto" alt="" />
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="meta"><strong>Sobre creme</strong>Background da marca</div>
+    <div class="card cream">
+      <img src="logo/png/logo-2048.png?v=3" style="width: 100%; max-width: 760px; display: block; height: auto" alt="" />
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="meta"><strong>Monocromático</strong>Para impressão, fax, b&amp;w</div>
+    <div class="card">
+      <img src="logo/png/logo-mono-2048.png?v=3" style="width: 100%; max-width: 760px; display: block; height: auto" alt="" />
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="meta"><strong>Mono invertido</strong>Sobre fundo escuro</div>
+    <div class="card dark">
+      <img src="logo/png/logo-mono-white-2048.png?v=3" style="width: 100%; max-width: 760px; display: block; height: auto" alt="" />
+    </div>
+  </div>
+
+  <hr class="rule" />
+
+  <!-- Escalas -->
+  <div>
+    <h1 style="font-size: 22px">Em escala</h1>
+    <p class="sub">A wordmark mantém legibilidade até ~16px de altura. Abaixo disso, use o ícone quadrado.</p>
+    <div class="scale-row">
+      <div class="scale-item"><img src="logo/png/logo-2048.png?v=3" style="height: 16px; width: auto; display: block" alt="" /><div class="meta">16px</div></div>
+      <div class="scale-item"><img src="logo/png/logo-2048.png?v=3" style="height: 24px; width: auto; display: block" alt="" /><div class="meta">24px</div></div>
+      <div class="scale-item"><img src="logo/png/logo-2048.png?v=3" style="height: 32px; width: auto; display: block" alt="" /><div class="meta">32px</div></div>
+      <div class="scale-item"><img src="logo/png/logo-2048.png?v=3" style="height: 48px; width: auto; display: block" alt="" /><div class="meta">48px</div></div>
+      <div class="scale-item"><img src="logo/png/logo-2048.png?v=3" style="height: 64px; width: auto; display: block" alt="" /><div class="meta">64px</div></div>
+      <div class="scale-item"><img src="logo/png/logo-2048.png?v=3" style="height: 96px; width: auto; display: block" alt="" /><div class="meta">96px</div></div>
+    </div>
+  </div>
+
+  <hr class="rule" />
+
+  <!-- Icon -->
+  <div class="row">
+    <div class="meta"><strong>Favicon / ícone</strong>Para usos quadrados</div>
+    <div style="display: flex; gap: 24px; align-items: center">
+      <div class="card" style="width: 160px; height: 160px; min-height: 0; padding: 0">
+        <img src="logo/png/icon-1024.png?v=3" style="width: 100%; height: 100%; display: block" alt="" />
+      </div>
+      <div class="card dark" style="width: 160px; height: 160px; min-height: 0; padding: 0">
+        <img src="logo/png/icon-dark-1024.png?v=3" style="width: 100%; height: 100%; display: block" alt="" />
+      </div>
+      <div class="card" style="width: 96px; height: 96px; min-height: 0; padding: 0">
+        <img src="logo/png/icon-1024.png?v=3" style="width: 100%; height: 100%; display: block" alt="" />
+      </div>
+      <div class="card" style="width: 48px; height: 48px; min-height: 0; padding: 0">
+        <img src="logo/png/icon-1024.png?v=3" style="width: 100%; height: 100%; display: block" alt="" />
+      </div>
+    </div>
+  </div>
+
+  <hr class="rule" />
+
+  <!-- Download links -->
+  <div>
+    <h1 style="font-size: 22px">Arquivos</h1>
+    <p class="sub">SVG é vetorial (use sempre que possível). PNGs ficam em <code>logo/png/</code> em quatro tamanhos: 512, 1024, 2048 e 4096 px de largura.</p>
+    <div class="downloads">
+      <a class="dl" href="logo/logo.svg" download><span class="name">Wordmark primária</span><span class="ext">SVG</span></a>
+      <a class="dl" href="logo/logo-dark.svg" download><span class="name">Wordmark invertida</span><span class="ext">SVG</span></a>
+      <a class="dl" href="logo/logo-mono.svg" download><span class="name">Wordmark mono preta</span><span class="ext">SVG</span></a>
+      <a class="dl" href="logo/logo-mono-white.svg" download><span class="name">Wordmark mono branca</span><span class="ext">SVG</span></a>
+      <a class="dl" href="logo/icon.svg" download><span class="name">Ícone (quadrado)</span><span class="ext">SVG</span></a>
+      <a class="dl" href="logo/icon-dark.svg" download><span class="name">Ícone invertido</span><span class="ext">SVG</span></a>
+      <a class="dl" href="logo/png/logo-512.png?v=3" download><span class="name">Wordmark · 512px</span><span class="ext">PNG</span></a>
+      <a class="dl" href="logo/png/logo-1024.png?v=3" download><span class="name">Wordmark · 1024px</span><span class="ext">PNG</span></a>
+      <a class="dl" href="logo/png/logo-2048.png?v=3" download><span class="name">Wordmark · 2048px</span><span class="ext">PNG</span></a>
+      <a class="dl" href="logo/png/logo-4096.png?v=3" download><span class="name">Wordmark · 4096px</span><span class="ext">PNG</span></a>
+      <a class="dl" href="logo/png/logo-dark-2048.png?v=3" download><span class="name">Wordmark invertida · 2048px</span><span class="ext">PNG</span></a>
+      <a class="dl" href="logo/png/icon-1024.png?v=3" download><span class="name">Ícone · 1024px</span><span class="ext">PNG</span></a>
+    </div>
+  </div>
+
+  <hr class="rule" />
+
+  <div>
+    <h1 style="font-size: 22px">Como usar</h1>
+    <ul style="font-size: 14px; line-height: 1.6; color: rgba(23,20,17,0.75); padding-left: 20px">
+      <li>Cor da marca: <code>#00A0A0</code>. Os pontos e <code>.br</code> são sempre nesse teal; o resto da wordmark fica na cor de texto do contexto (preto sobre claro, branco sobre escuro).</li>
+      <li>Tipografia: Geist 600 (semibold), letter-spacing -0.02em. Quando a Geist não estiver disponível, usar <code>-apple-system, system-ui, sans-serif</code>.</li>
+      <li>Área de respiro: mínimo igual à altura da letra "d" em volta da wordmark inteira.</li>
+      <li>Tamanho mínimo: 16px de altura. Abaixo, use o ícone quadrado.</li>
+      <li>Antes de imprimir ou enviar para terceiros, converta o texto do SVG em <em>outlines</em>/paths num editor (Figma, Illustrator) — assim o arquivo não depende da fonte instalada.</li>
+    </ul>
+  </div>
+
+</div>
+
+</body>
+</html>

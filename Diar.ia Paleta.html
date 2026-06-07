@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Diar.ia — Paleta (4 cores)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400..600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#171411; --bege:#ebe5d0; --papel:#FBFAF6; --teal:#00a0a0;
+    --mono:'Geist Mono', ui-monospace, monospace;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bege); color:var(--ink); font-family:var(--mono);
+    -webkit-font-smoothing:antialiased; padding:48px clamp(20px,5vw,64px) 64px;}
+  .sheet{max-width:980px; margin:0 auto; background:var(--papel);
+    border:1px solid var(--bege); border-radius:16px; overflow:hidden;
+    box-shadow:0 1px 0 rgba(23,20,17,.04);}
+  .head{padding:36px 40px 30px; border-bottom:1px solid var(--bege);}
+  .kicker{font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--teal); margin:0 0 12px;}
+  h1{font-family:Georgia,'Times New Roman',serif; font-weight:500; letter-spacing:-.03em;
+    line-height:1; font-size:clamp(30px,5vw,46px); margin:0;}
+  .sub{font-size:12.5px; line-height:1.6; color:var(--ink); opacity:.7; margin:14px 0 0; max-width:560px;}
+
+  .row{display:grid; grid-template-columns:repeat(4,1fr); }
+  @media(max-width:720px){ .row{grid-template-columns:repeat(2,1fr);} }
+  .sw{border-right:1px solid var(--bege); border-bottom:1px solid var(--bege);}
+  .sw:last-child{border-right:none;}
+  .chip{height:160px;}
+  .meta{padding:18px 20px 24px;}
+  .name{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink); margin:0 0 8px;}
+  .hex{font-size:15px; font-weight:600; letter-spacing:.02em; color:var(--ink); margin:0 0 12px;}
+  .role{font-size:11px; line-height:1.55; color:var(--ink); opacity:.7; margin:0;}
+
+  .foot{display:flex; flex-wrap:wrap; gap:10px 26px; padding:24px 40px 34px; }
+  .foot .item{display:flex; align-items:center; gap:9px; font-size:11px; letter-spacing:.04em; color:var(--ink); opacity:.85;}
+  .dot{width:13px; height:13px; border-radius:3px; border:1px solid rgba(23,20,17,.12);}
+</style>
+</head>
+<body>
+  <div class="sheet">
+    <div class="head">
+      <p class="kicker">● Diar.ia · sistema de cor</p>
+      <h1>Paleta — 4 cores</h1>
+      <p class="sub">Quatro cores: a tinta (todo o texto), <b>um único bege quente</b> que preenche áreas e desenha os fios, o papel quase-branco de fundo, e um teal de acento. A hierarquia do texto vem de tamanho e peso, não de tom.</p>
+    </div>
+
+    <div class="row">
+      <div class="sw">
+        <div class="chip" style="background:#171411;"></div>
+        <div class="meta"><p class="name">Ink</p><p class="hex">#171411</p><p class="role">Todo o texto sobre claro e o fundo do rodapé.</p></div>
+      </div>
+      <div class="sw">
+        <div class="chip" style="background:#ebe5d0;"></div>
+        <div class="meta"><p class="name">Bege</p><p class="hex">#EBE5D0</p><p class="role">Moldura externa, preenchimento dos boxes e todos os fios / divisórias.</p></div>
+      </div>
+      <div class="sw">
+        <div class="chip" style="background:#FBFAF6; box-shadow:inset 0 0 0 1px rgba(23,20,17,.06);"></div>
+        <div class="meta"><p class="name">Papel</p><p class="hex">#FBFAF6</p><p class="role">Fundo da folha — quase branco, leve calor.</p></div>
+      </div>
+      <div class="sw">
+        <div class="chip" style="background:#00a0a0;"></div>
+        <div class="meta"><p class="name">Teal</p><p class="hex">#00A0A0</p><p class="role">Único acento — kickers, pontos e links.</p></div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <div class="item"><span class="dot" style="background:#171411;"></span>#171411</div>
+      <div class="item"><span class="dot" style="background:#ebe5d0;"></span>#EBE5D0</div>
+      <div class="item"><span class="dot" style="background:#FBFAF6;"></span>#FBFAF6</div>
+      <div class="item"><span class="dot" style="background:#00a0a0;"></span>#00A0A0</div>
+    </div>
+  </div>
+</body>
+</html>

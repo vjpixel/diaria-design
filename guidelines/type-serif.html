@@ -1,0 +1,29 @@
+<!-- @dsCard group="Type" viewport="700x230" name="Serifada · Georgia" subtitle="A voz editorial — manchetes grandes, itálico para ênfase" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../styles.css" />
+<style>
+  body { margin: 0; background: var(--paper); font-family: var(--font-sans); color: var(--ink); }
+  .wrap { padding: 28px 32px; }
+  .serif { font-family: var(--font-serif); }
+  .h1 { font-size: 64px; line-height: 0.95; letter-spacing: var(--tracking-tight); font-weight: 500; margin: 0; }
+  .row { display: flex; align-items: baseline; gap: 18px; margin-top: 16px; flex-wrap: wrap; }
+  .row .serif { font-weight: 500; letter-spacing: var(--tracking-snug); }
+  .tag { font-family: var(--font-mono); font-size: 10px; color: var(--ink-faint); letter-spacing: 0.08em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1 class="serif h1">O que <em style="color:var(--brand-deep)">não cabe</em> em 5 minutos.</h1>
+    <div class="row">
+      <span class="serif" style="font-size:32px">Heading 32</span>
+      <span class="serif" style="font-size:26px">Heading 26</span>
+      <span class="serif" style="font-size:22px">Heading 22</span>
+      <span class="serif" style="font-size:18px; font-style:italic; color:var(--ink-soft)">dek itálico 18</span>
+    </div>
+    <div class="tag" style="margin-top:18px">Georgia · 400/700 · itálico disponível · web-safe · tracking −0.02 a −0.05em</div>
+  </div>
+</body>
+</html>

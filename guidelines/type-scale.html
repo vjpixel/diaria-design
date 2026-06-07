@@ -1,0 +1,27 @@
+<!-- @dsCard group="Type" viewport="700x250" name="Escala tipográfica" subtitle="Do masthead ao micro-label — a hierarquia editorial" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../styles.css" />
+<style>
+  body { margin: 0; background: var(--paper); font-family: var(--font-sans); color: var(--ink); }
+  .wrap { padding: 24px 32px; display: flex; flex-direction: column; gap: 8px; }
+  .line { display: flex; align-items: baseline; gap: 16px; border-bottom: 1px solid var(--rule); padding-bottom: 7px; }
+  .spec { font-family: var(--font-mono); font-size: 10px; color: var(--ink-faint); letter-spacing: 0.06em; width: 124px; flex: 0 0 124px; }
+  .serif { font-family: var(--font-serif); font-weight: 500; letter-spacing: -0.03em; line-height: 1; }
+  .sans { font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="line"><span class="spec">Display · 88 serif</span><span class="serif" style="font-size:46px">Toda manhã.</span></div>
+    <div class="line"><span class="spec">H1 · 68 serif</span><span class="serif" style="font-size:38px">Edições anteriores</span></div>
+    <div class="line"><span class="spec">H2 · 52 serif</span><span class="serif" style="font-size:30px">Livros sobre IA</span></div>
+    <div class="line"><span class="spec">H3 · 32 serif</span><span class="serif" style="font-size:24px">Perguntas frequentes</span></div>
+    <div class="line"><span class="spec">Lead · 20 sans</span><span class="sans" style="font-size:18px; color:var(--ink-soft)">Seu filtro no caos de IA</span></div>
+    <div class="line"><span class="spec">Body · 15 sans</span><span class="sans" style="font-size:15px; color:var(--ink-soft)">Para ler em 5 minutos</span></div>
+    <div class="line" style="border:none"><span class="spec">Kicker · 11 mono</span><span class="sans" style="font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:0.16em; color:var(--ink-faint)">Assine grátis</span></div>
+  </div>
+</body>
+</html>
