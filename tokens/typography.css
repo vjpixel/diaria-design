@@ -20,13 +20,13 @@
   --text-h5:       22px;
 
   /* — Body & UI (sans) — */
-  --text-lead:     20px;   /* intro paragraphs (often serif italic too) */
-  --text-body:     15px;
-  --text-ui:       13px;   /* buttons, nav, controls */
+  --text-lead:     22px;   /* intro paragraphs / callout titles (era 20 — alinhado ao uso no e-mail; agora == h5) */
+  --text-body:     16px;   /* corpo (era 15 — alinhado ao render do e-mail) */
+  --text-ui:       12px;   /* buttons, nav, controls (era 13) */
   --text-small:    12px;
 
   /* — Kicker / label (mono) — */
-  --text-kicker:   11px;   /* uppercase, letter-spacing 0.16em */
+  --text-kicker:   12px;   /* uppercase, letter-spacing 0.16em (era 11 — alinhado ao e-mail) */
   --text-micro:    10px;
 
   /* — Weights — */
