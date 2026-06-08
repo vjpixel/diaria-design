@@ -105,6 +105,29 @@ As lombadas de livros são blocos de cor sólida com sombra interna nas bordas
 
 ---
 
+## Convenções de e-mail
+
+O e-mail (Beehiiv) tem restrições de cliente que sobrescrevem algumas escolhas
+de superfície web. Consumidor de referência: `Diar.ia Email Template.html` +
+`diaria-studio/scripts/render-newsletter-html.ts`.
+
+- **Superfícies (#3):** o e-mail é **branco** — card (`.container`) `#FFFFFF` sobre
+  página `#FFFFFF`, **sem trilhos laterais**. O token `--paper` (#FBFAF6) e a
+  estrutura papel-sobre-bege seguem valendo na **web/mensal**, não no e-mail
+  diário (override email-only, diaria-studio#1943/#1945).
+- **Underline de acento (#2):** manchetes/itens de lista usam
+  `text-decoration: underline` + `text-decoration-color: var(--brand)`. Sublinha
+  **todas as linhas** de um título multi-linha; o `border-bottom` (email-safe no
+  Outlook) só traça a última linha — por isso preterido. Onde o cliente remove
+  `text-decoration-color` (Outlook), o sublinhado degrada pra ink (aceito).
+- **Reveal / nota (#1):** box **contorno** (fundo card + `1px solid --rule`), não
+  painel. Convenção: **painel** (bege preenchido) = bloco de **ação** (É IA?,
+  CTA); **contorno** = **nota/reveal** informativo.
+- **Type scale (#4):** ponta pequena consolidada em **12px** (kicker/ui/small);
+  corpo **16px**; lead/títulos de callout **22px** — ver `tokens/typography.css`.
+
+---
+
 ## Iconografia
 
 A marca é **quase sem ícones**. Em vez de um set de ícones, usa **glifos tipográficos**
