@@ -23,10 +23,15 @@
   --rule-strong:    #171411;  /* régua editorial pesada (2px) */
 
   /* — Paper (superfícies) — */
-  --paper:          #FBFAF6;  /* fundo principal — quase branco quente */
+  --paper:          #FBFAF6;  /* fundo principal — quase branco quente (WEB: site, É IA?, cursos/livros) */
   --paper-alt:      #EBE5D0;  /* moldura, seções recuadas, boxes cheios */
   --paper-page:     #EBE5D0;  /* shell do app → bege */
   --surface-card:   #FBFAF6;  /* cartões = papel + borda bege */
+  /* E-MAIL (diária + mensal): fundo do card e da página = #FFFFFF (branco puro).
+     Clientes de e-mail renderizam branco de forma previsível; #FBFAF6 (cream)
+     pode virar cinza em modo escuro/inversão. --paper #FBFAF6 é para WEB.
+     Decisão editorial 2026-06-09 (#2005 / diaria-studio#1943 / diaria-studio#1955). */
+  --paper-email:    #FFFFFF;
 
   /* — On-ink (sobre escuro) — */
   --on-ink:         #FBFAF6;  /* texto sobre ink */
