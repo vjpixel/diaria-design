@@ -1,0 +1,14 @@
+{
+  "name": "diaria-logo-export",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Reproducible PNG export for the Diar.ia logo assets, rendered from the canonical SVGs.",
+  "scripts": {
+    "export": "node export-logos.mjs",
+    "check": "node export-logos.mjs --check"
+  },
+  "dependencies": {
+    "@resvg/resvg-js": "^2.6.2"
+  }
+}
