@@ -56,12 +56,17 @@ const SERIF = "Georgia, 'Times New Roman', serif"
 export const BANNERS = [
   { key: 'facebook', file: 'facebook-cover-1640x624.png', w: 1640, h: 624, layout: 'centered', bg: PAPER },
   { key: 'linkedin-diaria', file: 'linkedin-cover-2256x382.png', w: 2256, h: 382, layout: 'side', bg: PAPER },
-  { key: 'linkedin-pessoal', file: 'linkedin-cover-pessoal-3168x792.png', w: 3168, h: 792, layout: 'centered', bg: PAPER, avatarSafeLeft: true },
-  { key: 'twitter', file: 'twitter-header-1500x500.png', w: 1500, h: 500, layout: 'centered', bg: PAPER, avatarSafeLeft: true },
+  // LinkedIn pessoal e X sobrepõem o avatar no canto inferior ESQUERDO; o
+  // layout centered mantém wordmark/tagline no centro e o CTA à direita, então
+  // nada essencial cai na zona coberta — sem offset especial.
+  { key: 'linkedin-pessoal', file: 'linkedin-cover-pessoal-3168x792.png', w: 3168, h: 792, layout: 'centered', bg: PAPER },
+  { key: 'twitter', file: 'twitter-header-1500x500.png', w: 1500, h: 500, layout: 'centered', bg: PAPER },
   { key: 'apoiase', file: 'apoiase-cover-4800x900.png', w: 4800, h: 900, layout: 'dark', bg: INK },
   { key: 'umapenca-desktop', file: 'umapenca-banner-desktop-1920x400.png', w: 1920, h: 400, layout: 'side', bg: PAPER },
   { key: 'umapenca-mobile', file: 'umapenca-banner-mobile-1250x400.png', w: 1250, h: 400, layout: 'centered', bg: PAPER },
 ]
+
+const escXml = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
 // --- wordmark (mirrors assets/logo/logo.svg tspan structure) -----------------
 function wordmark(x, y, size, anchor = 'middle', dark = false) {
@@ -70,7 +75,7 @@ function wordmark(x, y, size, anchor = 'middle', dark = false) {
 }
 
 function mono(x, y, size, text, { anchor = 'middle', fill = INK, tracking = '0.18em', weight = 500 } = {}) {
-  return `<text x="${x}" y="${y}" text-anchor="${anchor}" font-family="${MONO}" font-weight="${weight}" font-size="${size}" letter-spacing="${tracking}" fill="${fill}">${text}</text>`
+  return `<text x="${x}" y="${y}" text-anchor="${anchor}" font-family="${MONO}" font-weight="${weight}" font-size="${size}" letter-spacing="${tracking}" fill="${fill}">${escXml(text)}</text>`
 }
 
 // --- layouts -----------------------------------------------------------------
@@ -90,7 +95,7 @@ function layoutCentered(b) {
   ${wordmark(w / 2, h * 0.46, wordmarkSize)}
   ${mono(w / 2, h * 0.655, taglineSize, TAGLINE)}
   <rect x="${mx}" y="${h * 0.76}" width="${w - 2 * mx}" height="${Math.max(1, h * 0.0025)}" fill="${RULE_SOFT}"/>
-  <text x="${w - mx}" y="${h * 0.885}" text-anchor="end" font-family="${SERIF}" font-weight="700" font-size="${ctaSize}"><tspan fill="${INK}">${CTA_PREFIX}</tspan><tspan fill="${TEAL}">${CTA_DOMAIN}</tspan></text>`
+  <text x="${w - mx}" y="${h * 0.885}" text-anchor="end" font-family="${SERIF}" font-weight="700" font-size="${ctaSize}"><tspan fill="${INK}">${escXml(CTA_PREFIX)}</tspan><tspan fill="${TEAL}">${escXml(CTA_DOMAIN)}</tspan></text>`
 }
 
 // side: wordmark left, tagline block right — for very wide/short strips
