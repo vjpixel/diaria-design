@@ -6,7 +6,7 @@
 // this file is the canonical source; committed PNGs are build artifacts.
 //
 // Fonts:
-//   - Georgia (wordmark + serif line): system font, same rationale as
+//   - Georgia (CTA serif line): system font, same rationale as
 //     export-logos.mjs — proprietary, can't be vendored. Needs Georgia
 //     installed (Windows/macOS ship it).
 //   - Geist Mono (kickers/tagline, per tokens/typography.css): vendored via
