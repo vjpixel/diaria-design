@@ -2,10 +2,15 @@
 // Logo PNG export + structural check for Diar.ia.
 //
 // `export` renders every PNG under assets/logo/png (and the logo/ mirror)
-// directly from the canonical SVGs in assets/logo, using the vendored
-// Newsreader Bold font. Generating from the SVGs is what removes the class of
-// bug that shipped a "transparent" white wordmark with an opaque dark
-// background baked in (see #9).
+// directly from the canonical SVGs in assets/logo. The brand face is
+// **Georgia** (round teal dots) — loaded from the system, not vendored, since
+// Georgia is proprietary and can't be redistributed in the repo. Generating
+// from the SVGs is what removes the class of bug that shipped a "transparent"
+// white wordmark with an opaque dark background baked in (see #9).
+//
+// NOTE: `export` needs Georgia installed (Windows/macOS ship it; on Linux
+// install a metric-equivalent or the real face). `--check` does NOT render, so
+// CI needs no font.
 //
 // `--check` does NOT compare bytes: a font rasterizer (resvg) produces
 // platform-dependent pixels — the same version renders slightly differently on
@@ -73,10 +78,11 @@ function plan() {
 // --- export (render) ---------------------------------------------------------
 async function runExport() {
   const { Resvg } = await import('@resvg/resvg-js')
-  const FONT = readFileSync(join(__dirname, 'fonts', 'Newsreader-Bold.ttf'))
 
   const render = (svg, width, height) => {
-    const opts = { font: { fontBuffers: [FONT], loadSystemFonts: false, defaultFontFamily: 'Newsreader' } }
+    // Georgia is loaded from the system (proprietary — not vendored). The SVGs
+    // declare `font-family="Georgia, ..."`; defaultFontFamily is the fallback.
+    const opts = { font: { loadSystemFonts: true, defaultFontFamily: 'Georgia' } }
     // fitTo is unreliable across resvg-js versions for viewBox-only SVGs; set
     // the root width/height explicitly instead.
     const sized = svg.replace(/<svg /, `<svg width="${width}" height="${height}" `)

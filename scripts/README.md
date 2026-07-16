@@ -20,10 +20,11 @@ npm run export     # regenera os PNGs a partir dos SVGs (usa resvg)
 npm run check      # valida invariantes estruturais dos PNGs (usa pngjs)
 ```
 
-Requer só Node + npm. A fonte **Newsreader Bold** (instância estática opsz 72 /
-wght 700, família renomeada para `Newsreader`) está vendorada em
-`fonts/Newsreader-Bold.ttf` — sem download em build, sem fontTools. Licença OFL
-em `fonts/OFL.txt`.
+A fonte da marca é **Georgia** (bold, pontos teal redondos) — carregada do
+**sistema** (`loadSystemFonts`), não vendorada, porque Georgia é proprietária e
+não pode ser redistribuída no repo. `npm run export` precisa de Georgia
+instalada (Windows/macOS já têm). `npm run check` **não** renderiza, então o CI
+não precisa de fonte nenhuma.
 
 ## `check` valida estrutura, não bytes
 
