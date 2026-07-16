@@ -1,130 +1,192 @@
 #!/usr/bin/env node
-// Reproducible logo PNG export for Diar.ia.
+// Logo PNG export + structural check for Diar.ia.
 //
-// Renders every PNG under assets/logo/png (and the logo/ mirror) directly from
-// the canonical SVGs in assets/logo, using the vendored Newsreader Bold font.
-// Deterministic: a clean checkout + `npm run export` yields no diff.
+// `export` renders every PNG under assets/logo/png (and the logo/ mirror)
+// directly from the canonical SVGs in assets/logo, using the vendored
+// Newsreader Bold font. Generating from the SVGs is what removes the class of
+// bug that shipped a "transparent" white wordmark with an opaque dark
+// background baked in (see #9).
 //
-// Why this exists: the PNGs were originally exported ad-hoc, which let bugs slip
-// in (e.g. a "transparent" white wordmark that shipped with an opaque dark
-// background baked in). Generating from the SVGs removes that class of error.
+// `--check` does NOT compare bytes: a font rasterizer (resvg) produces
+// platform-dependent pixels — the same version renders slightly differently on
+// Windows vs Linux — so byte-identity across machines is unattainable and would
+// make CI fail spuriously. Instead it validates platform-independent structural
+// invariants of the committed PNGs (dimensions, alpha channel, expected
+// transparency, visible ink). That still catches the #9-class bug while passing
+// on any OS.
 //
-// Usage:  npm install && npm run export
-//         node export-logos.mjs --check   # fail if output differs (CI guard)
+// Usage:  npm install && npm run export     # regenerate PNGs (needs resvg)
+//         npm run check                      # verify invariants (needs pngjs)
 
-import { Resvg } from '@resvg/resvg-js'
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
-import { dirname, join } from 'node:path'
+import { dirname, join, relative } from 'node:path'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const REPO = join(__dirname, '..')
-const FONT = readFileSync(join(__dirname, 'fonts', 'Newsreader-Bold.ttf'))
 
-// The two mirrored asset trees kept in sync. SVGs are read from the first;
-// PNGs are written to the png/ dir of each.
 const TREES = ['assets/logo', 'logo'].map((p) => join(REPO, p))
 const SVG_DIR = TREES[0]
-
-const PAPER = '#FBFAF6' // brand paper background for opaque composites
+const PAPER = '#FBFAF6'
 
 // --- render matrix -----------------------------------------------------------
-// Wordmark canvas proportion: the family ships at 474/2048. The source SVGs use
-// a tight viewBox (1180x240 -> 0.203); we reframe to 1180x273 (-> 0.2314) so the
-// raster has the family's vertical padding. Icons are square, no reframe.
+// Wordmark canvas proportion: the family ships at 474/2048. Source SVGs use a
+// tight viewBox (1180x240 -> 0.203); we reframe to 1180x273 (-> 0.2314) so the
+// raster carries the family's vertical padding. Icons are square, no reframe.
 const WORDMARK_SIZES = [512, 1024, 2048, 3307, 4096]
 const ICON_SIZES = [256, 512, 1024, 3307]
 const WORDMARK_FRAME_VIEWBOX = '0 0 1180 273'
 const WORDMARK_ASPECT = 273 / 1180
 
-// slug -> config. Wordmarks and icons are discovered from the SVGs present.
 const WORDMARKS = ['logo', 'logo-mono', 'logo-mono-white', 'logo-white-teal', 'logo-dark']
 const ICONS = ['icon', 'icon-dark', 'icon-dotdot', 'icon-dotdot-dark']
-// Opaque paper composites, rendered from an existing wordmark SVG.
 const PAPER_COMPOSITES = [{ from: 'logo', out: 'logo-paper', sizes: [2048, 3307] }]
 
-// --- helpers -----------------------------------------------------------------
-function renderPng(svg, width, height, background) {
-  const opts = {
-    font: { fontBuffers: [FONT], loadSystemFonts: false, defaultFontFamily: 'Newsreader' },
+// Variants whose wordmark ink is white — must contain visible near-white pixels.
+const WHITE_INK = new Set(['logo-mono-white', 'logo-white-teal', 'logo-dark'])
+
+// The build plan: one entry per output PNG, with the invariants `--check` asserts.
+// { path, width, height, opaqueBg, whiteInk, rounded }
+function plan() {
+  const items = []
+  const push = (name, spec) => {
+    for (const tree of TREES) items.push({ path: join(tree, 'png', name), ...spec })
   }
-  if (background) opts.background = background
-  // fitTo is unreliable across resvg-js versions for viewBox-only SVGs; set the
-  // root width/height explicitly instead.
-  const sized = svg.replace(/<svg /, `<svg width="${width}" height="${height}" `)
-  if (sized === svg) throw new Error('opening `<svg ` tag not found — cannot set output size')
-  return new Resvg(sized, opts).render().asPng()
+  const wmH = (w) => Math.round(w * WORDMARK_ASPECT)
+
+  for (const slug of WORDMARKS)
+    for (const w of WORDMARK_SIZES)
+      push(`${slug}-${w}.png`, { width: w, height: wmH(w), opaqueBg: false, whiteInk: WHITE_INK.has(slug) })
+
+  for (const { out: name, sizes } of PAPER_COMPOSITES)
+    for (const w of sizes) push(`${name}-${w}.png`, { width: w, height: wmH(w), opaqueBg: true, whiteInk: false })
+
+  for (const slug of ICONS)
+    for (const s of ICON_SIZES)
+      // Icons have a rounded rect (rx=96) so the very corner is transparent, but
+      // the interior is a solid fill. Dark-ground icons carry white ink.
+      push(`${slug}-${s}.png`, { width: s, height: s, opaqueBg: false, rounded: true, whiteInk: slug.endsWith('-dark') })
+
+  return items
 }
 
-function wordmarkSvg(slug) {
-  const svg = readFileSync(join(SVG_DIR, `${slug}.svg`), 'utf8')
-  const framed = svg.replace(/viewBox="0 0 1180 240"/, `viewBox="${WORDMARK_FRAME_VIEWBOX}"`)
-  // Fail loud: a silent no-op here would raster the wrong aspect ratio and
-  // commit a distorted PNG with no error (the "add a variant" flow in README).
-  if (framed === svg) {
-    throw new Error(`${slug}.svg: expected viewBox "0 0 1180 240" not found — reframe aborted`)
-  }
-  return framed
-}
+// --- export (render) ---------------------------------------------------------
+async function runExport() {
+  const { Resvg } = await import('@resvg/resvg-js')
+  const FONT = readFileSync(join(__dirname, 'fonts', 'Newsreader-Bold.ttf'))
 
-// Collect every (relativePath -> bytes) this build produces.
-function build() {
-  const out = new Map()
-  const add = (name, bytes) => {
-    for (const tree of TREES) out.set(join(tree, 'png', name), bytes)
+  const render = (svg, width, height) => {
+    const opts = { font: { fontBuffers: [FONT], loadSystemFonts: false, defaultFontFamily: 'Newsreader' } }
+    // fitTo is unreliable across resvg-js versions for viewBox-only SVGs; set
+    // the root width/height explicitly instead.
+    const sized = svg.replace(/<svg /, `<svg width="${width}" height="${height}" `)
+    if (sized === svg) throw new Error('opening `<svg ` tag not found — cannot set output size')
+    return new Resvg(sized, opts).render().asPng()
+  }
+  // Opaque background is drawn as a bleeding full-canvas <rect>: resvg-js's
+  // `background` option is silently ignored for these SVGs (shipped a "paper"
+  // composite that was actually transparent), so bake the fill into the SVG.
+  // The rect bleeds past the viewBox so the sub-pixel letterbox left by
+  // preserveAspectRatio "meet" (canvas aspect ≠ viewBox aspect after integer
+  // rounding) can't leave a transparent edge. Content outside the viewBox is
+  // clipped to the viewport, so the bleed is harmless.
+  const withBg = (svg, color) =>
+    svg.replace(/(<svg\b[^>]*>)/, `$1<rect x="-40" y="-40" width="1260" height="353" fill="${color}"/>`)
+  const wordmarkSvg = (slug) => {
+    const svg = readFileSync(join(SVG_DIR, `${slug}.svg`), 'utf8')
+    const framed = svg.replace(/viewBox="0 0 1180 240"/, `viewBox="${WORDMARK_FRAME_VIEWBOX}"`)
+    if (framed === svg) throw new Error(`${slug}.svg: expected viewBox "0 0 1180 240" not found — reframe aborted`)
+    return framed
   }
 
+  const bytesFor = new Map() // name -> buffer (rendered once, written to both trees)
+  const wmH = (w) => Math.round(w * WORDMARK_ASPECT)
   for (const slug of WORDMARKS) {
     if (!existsSync(join(SVG_DIR, `${slug}.svg`))) continue
     const svg = wordmarkSvg(slug)
-    for (const w of WORDMARK_SIZES) {
-      add(`${slug}-${w}.png`, renderPng(svg, w, Math.round(w * WORDMARK_ASPECT)))
-    }
+    for (const w of WORDMARK_SIZES) bytesFor.set(`${slug}-${w}.png`, render(svg, w, wmH(w)))
   }
-
   for (const { from, out: name, sizes } of PAPER_COMPOSITES) {
     if (!existsSync(join(SVG_DIR, `${from}.svg`))) continue
-    const svg = wordmarkSvg(from)
-    for (const w of sizes) {
-      add(`${name}-${w}.png`, renderPng(svg, w, Math.round(w * WORDMARK_ASPECT), PAPER))
-    }
+    const svg = withBg(wordmarkSvg(from), PAPER)
+    for (const w of sizes) bytesFor.set(`${name}-${w}.png`, render(svg, w, wmH(w)))
   }
-
   for (const slug of ICONS) {
     if (!existsSync(join(SVG_DIR, `${slug}.svg`))) continue
     const svg = readFileSync(join(SVG_DIR, `${slug}.svg`), 'utf8')
-    for (const s of ICON_SIZES) add(`${slug}-${s}.png`, renderPng(svg, s, s))
+    for (const s of ICON_SIZES) bytesFor.set(`${slug}-${s}.png`, render(svg, s, s))
   }
 
-  return out
+  let written = 0
+  for (const [name, bytes] of bytesFor) {
+    for (const tree of TREES) {
+      const path = join(tree, 'png', name)
+      mkdirSync(dirname(path), { recursive: true })
+      writeFileSync(path, bytes)
+      written++
+    }
+  }
+  console.log(`exported ${written} PNGs from ${bytesFor.size} unique renders`)
+}
+
+// --- check (structural, platform-independent) --------------------------------
+async function runCheck() {
+  const { PNG } = await import('pngjs')
+  const rel = (p) => relative(REPO, p).split('\\').join('/')
+  const px = (png, x, y) => {
+    const i = (png.width * y + x) << 2
+    return [png.data[i], png.data[i + 1], png.data[i + 2], png.data[i + 3]]
+  }
+
+  const errors = []
+  const items = plan()
+  for (const it of items) {
+    if (!existsSync(it.path)) {
+      errors.push(`${rel(it.path)}: faltando — rode 'npm run export'`)
+      continue
+    }
+    let png
+    try {
+      png = PNG.sync.read(readFileSync(it.path))
+    } catch (e) {
+      errors.push(`${rel(it.path)}: PNG ilegível (${e.message})`)
+      continue
+    }
+    const fail = (m) => errors.push(`${rel(it.path)}: ${m}`)
+
+    if (png.width !== it.width || png.height !== it.height)
+      fail(`dimensão ${png.width}x${png.height}, esperado ${it.width}x${it.height}`)
+
+    // Corner pixel: transparent for wordmarks/icons (rounded), opaque for paper.
+    const cornerA = px(png, 0, 0)[3]
+    if (it.opaqueBg && cornerA !== 255) fail(`fundo devia ser opaco, canto alpha=${cornerA}`)
+    if (!it.opaqueBg && cornerA !== 0) fail(`fundo devia ser transparente, canto alpha=${cornerA} (regressão tipo #9)`)
+
+    // Must have visible content: sample a grid, require opaque + (white ink) near-white pixels.
+    let opaque = 0
+    let white = 0
+    const STEP = Math.max(1, Math.floor(Math.min(png.width, png.height) / 64))
+    for (let y = 0; y < png.height; y += STEP)
+      for (let x = 0; x < png.width; x += STEP) {
+        const [r, g, b, a] = px(png, x, y)
+        if (a > 200) {
+          opaque++
+          if (r > 240 && g > 240 && b > 240) white++
+        }
+      }
+    if (opaque === 0) fail('sem pixels opacos — imagem vazia?')
+    if (it.whiteInk && white === 0) fail('variante de tinta branca sem pixels near-white visíveis')
+  }
+
+  if (errors.length) {
+    console.error(`\n${errors.length} problema(s):`)
+    for (const e of errors) console.error('  ✗ ' + e)
+    console.error(`\nInvariantes estruturais falharam. Se você alterou um SVG, rode 'npm run export'.`)
+    process.exit(1)
+  }
+  console.log(`ok — ${items.length} PNGs passam nas invariantes estruturais`)
 }
 
 // --- run ---------------------------------------------------------------------
-const CHECK = process.argv.includes('--check')
-const files = build()
-let written = 0
-let drifted = 0
-
-for (const [path, bytes] of files) {
-  const exists = existsSync(path)
-  const same = exists && Buffer.compare(readFileSync(path), bytes) === 0
-  if (same) continue
-  if (CHECK) {
-    console.error(`drift: ${path.replace(REPO + '\\', '').replace(REPO + '/', '')}`)
-    drifted++
-    continue
-  }
-  mkdirSync(dirname(path), { recursive: true })
-  writeFileSync(path, bytes)
-  written++
-}
-
-if (CHECK) {
-  if (drifted) {
-    console.error(`\n${drifted} file(s) out of date. Run: npm run export`)
-    process.exit(1)
-  }
-  console.log(`ok — ${files.size} PNGs match the SVG sources`)
-} else {
-  console.log(`exported ${files.size} PNGs (${written} written, ${files.size - written} already current)`)
-}
+if (process.argv.includes('--check')) await runCheck()
+else await runExport()

@@ -1,29 +1,48 @@
-# Export reproduzível dos logos
+# Export + check dos logos
 
 Gera **todos os PNGs** de `assets/logo/png` (e do espelho `logo/png`) a partir dos
-SVGs canônicos em `assets/logo/`. Determinístico: um checkout limpo + `npm run export`
-não produz diff.
+SVGs canônicos em `assets/logo/`.
 
 ## Por que existe
 
 Os PNGs eram exportados ad-hoc, o que deixava bugs passarem — por exemplo, um
-wordmark "branco transparente" que foi commitado com o fundo escuro `#171411`
-**opaco embutido**. Rasterizar a partir do SVG elimina essa classe de erro e
-garante que a arte publicada é sempre a arte da fonte de verdade (o SVG).
+wordmark "branco transparente" commitado com o fundo escuro `#171411` **opaco
+embutido**, e uma composição "sobre papel" que na verdade saiu transparente.
+Rasterizar a partir do SVG elimina essa classe de erro: a arte publicada é
+sempre a arte da fonte de verdade (o SVG).
 
 ## Uso
 
 ```bash
 cd scripts
 npm install
-npm run export     # regenera os PNGs a partir dos SVGs
-npm run check      # falha se algum PNG estiver defasado (guard de CI)
+npm run export     # regenera os PNGs a partir dos SVGs (usa resvg)
+npm run check      # valida invariantes estruturais dos PNGs (usa pngjs)
 ```
 
 Requer só Node + npm. A fonte **Newsreader Bold** (instância estática opsz 72 /
 wght 700, família renomeada para `Newsreader`) está vendorada em
 `fonts/Newsreader-Bold.ttf` — sem download em build, sem fontTools. Licença OFL
 em `fonts/OFL.txt`.
+
+## `check` valida estrutura, não bytes
+
+Um rasterizador de fonte (resvg) produz pixels **dependentes de plataforma** — a
+mesma versão renderiza levemente diferente no Windows e no Linux — então
+igualdade byte-a-byte entre máquinas é inatingível e faria o CI falhar à toa
+(o `export` é byte-determinístico só na **mesma** plataforma+versão). Por isso o
+`check` não compara bytes: valida invariantes **independentes de plataforma** de
+cada PNG commitado:
+
+- dimensões corretas (largura + altura pela proporção do grupo);
+- canal alfa presente;
+- transparência esperada — wordmark/ícone com canto transparente; papel opaco
+  (pega a regressão tipo #9);
+- conteúdo visível — variantes de tinta branca precisam ter pixels near-white.
+
+Isso passa em qualquer OS e ainda pega os bugs que importam. Regenerar os PNGs
+(`npm run export`) num OS diferente muda os bytes mas continua passando no
+`check` — commit à vontade.
 
 ## Matriz gerada
 
