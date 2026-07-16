@@ -94,14 +94,17 @@ function layoutCentered(b) {
   const mx = Math.round(w * 0.06)
   const eyebrowSize = Math.round(h * 0.034)
   const maxLineLen = Math.max(TAGLINE_L1.length, TAGLINE_L2.length)
-  const taglineSize = Math.min(Math.round(h * 0.075), Math.round((w - 2 * mx) / (maxLineLen * 0.66)))
+  // #3577 hotfix rodada 2 (260716): editor reportou texto ilegível no mobile
+  // — cap subiu de 0.075h pra 0.12h (tagline é o hero agora que a wordmark
+  // saiu; precisa ocupar proporcionalmente mais espaço, não menos).
+  const taglineSize = Math.min(Math.round(h * 0.12), Math.round((w - 2 * mx) / (maxLineLen * 0.66)))
   const ctaSize = Math.round(h * 0.05)
   return `
   ${mono(mx, h * 0.135, eyebrowSize, EYEBROW_LEFT, { anchor: 'start', tracking: '0.22em' })}
   ${mono(w - mx, h * 0.135, eyebrowSize, EYEBROW_RIGHT, { anchor: 'end', tracking: '0.22em' })}
   <rect x="${mx}" y="${h * 0.175}" width="${w - 2 * mx}" height="${Math.max(2, h * 0.005)}" fill="${INK}"/>
-  ${mono(w / 2, h * 0.44, taglineSize, TAGLINE_L1, { tracking: '0.06em' })}
-  ${mono(w / 2, h * 0.58, taglineSize, TAGLINE_L2, { tracking: '0.06em' })}
+  ${mono(w / 2, h * 0.4, taglineSize, TAGLINE_L1, { tracking: '0.04em' })}
+  ${mono(w / 2, h * 0.6, taglineSize, TAGLINE_L2, { tracking: '0.04em' })}
   <rect x="${mx}" y="${h * 0.78}" width="${w - 2 * mx}" height="${Math.max(1, h * 0.0025)}" fill="${RULE_SOFT}"/>
   <text x="${w - mx}" y="${h * 0.9}" text-anchor="end" font-family="${SERIF}" font-weight="700" font-size="${ctaSize}"><tspan fill="${INK}">${escXml(CTA_PREFIX)}</tspan><tspan fill="${TEAL}">${escXml(CTA_DOMAIN)}</tspan></text>`
 }
