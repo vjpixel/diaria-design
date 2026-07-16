@@ -1,0 +1,27 @@
+name: logo-export-check
+
+# Falha se algum PNG de logo estiver defasado do SVG canônico — força rodar
+# `npm run export` (scripts/) antes de mergear. Ver scripts/README.md.
+
+on:
+  pull_request:
+    paths:
+      - 'assets/logo/**'
+      - 'logo/**'
+      - 'scripts/**'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: install export deps
+        working-directory: scripts
+        run: npm install --no-audit --no-fund
+      - name: check PNGs match SVGs
+        working-directory: scripts
+        run: npm run check
