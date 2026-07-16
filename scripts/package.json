@@ -8,10 +8,14 @@
     "export": "node export-logos.mjs",
     "check": "node export-logos.mjs --check",
     "gen-avatar": "node gen-avatar.mjs",
-    "check-avatar": "node gen-avatar.mjs --check"
+    "check-avatar": "node gen-avatar.mjs --check",
+    "gen-banners": "node gen-banners.mjs",
+    "check-banners": "node gen-banners.mjs --check"
   },
   "dependencies": {
+    "@fontsource/geist-mono": "^5.2.8",
     "@resvg/resvg-js": "2.6.2",
-    "pngjs": "^7.0.0"
+    "pngjs": "^7.0.0",
+    "wawoff2": "^2.0.1"
   }
 }
