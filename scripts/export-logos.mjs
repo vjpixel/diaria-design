@@ -52,12 +52,19 @@ function renderPng(svg, width, height, background) {
   // fitTo is unreliable across resvg-js versions for viewBox-only SVGs; set the
   // root width/height explicitly instead.
   const sized = svg.replace(/<svg /, `<svg width="${width}" height="${height}" `)
+  if (sized === svg) throw new Error('opening `<svg ` tag not found — cannot set output size')
   return new Resvg(sized, opts).render().asPng()
 }
 
 function wordmarkSvg(slug) {
   const svg = readFileSync(join(SVG_DIR, `${slug}.svg`), 'utf8')
-  return svg.replace(/viewBox="0 0 1180 240"/, `viewBox="${WORDMARK_FRAME_VIEWBOX}"`)
+  const framed = svg.replace(/viewBox="0 0 1180 240"/, `viewBox="${WORDMARK_FRAME_VIEWBOX}"`)
+  // Fail loud: a silent no-op here would raster the wrong aspect ratio and
+  // commit a distorted PNG with no error (the "add a variant" flow in README).
+  if (framed === svg) {
+    throw new Error(`${slug}.svg: expected viewBox "0 0 1180 240" not found — reframe aborted`)
+  }
+  return framed
 }
 
 // Collect every (relativePath -> bytes) this build produces.
