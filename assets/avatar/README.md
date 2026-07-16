@@ -1,35 +1,27 @@
-# Avatar Diar.ia — "d." → "d.."
+# Avatar / favicon Diar.ia — "d.."
 
-Set do avatar **d..** (dois pontos teal) para substituir o avatar **d.** atual.
-Georgia bold, pontos redondos, haste do "d" centralizada no círculo, pontos
-equidistantes seguindo à direita. **Papel (#FBFAF6) trocado por branco (#FFFFFF)**
-nos tratamentos claros (pedido do editor).
+Set do avatar **d..** em círculo. Georgia bold (outlined), haste do "d"
+centralizada no círculo, pontos redondos equidistantes seguindo à direita.
+**Proporção canônica: d.. a 1.2× do círculo** — ver [PROPORTION.md](PROPORTION.md)
+para a spec completa (composição, escalas, cores). Decisão do editor 260716.
 
-Cores: ink `#171411`, teal `#00A0A0`, branco `#FFFFFF`.
+Cores: ink `#171411`, teal `#00A0A0`, branco `#FFFFFF` (papel foi substituído por branco).
 
-## Mapa de substituição (arquivo atual → novo d..)
+## Tratamentos (cada um: SVG + PNG 16/32/64/180/320/512/1024/1080)
 
-| Atual (d.) | Novo (d..) |
-|---|---|
-| `diaria-avatar.svg` (círculo papel / fundo escuro) | `diaria-avatar-dd.svg` (círculo **branco** / fundo escuro) |
-| `diaria-avatar-180/320/512/1080.png` | `diaria-avatar-dd-180/320/512/1080.png` |
-| `diaria-avatar-bola-preta.png` | `diaria-avatar-dd-bola-preta-1080.png` |
-| `diaria-avatar-bola-preta-fundo-papel.png` | `diaria-avatar-dd-bola-preta-fundo-branco-1080.png` |
+| Arquivo | Descrição | Uso |
+|---|---|---|
+| `diaria-avatar-dd` | quadrado escuro + círculo branco | avatar principal |
+| `diaria-avatar-dd-bola-preta` | disco escuro, transparente | avatar/favicon versátil |
+| `diaria-avatar-dd-bola-branca` | disco branco, d preto, pontos teal, transparente | favicon fundo claro |
+| `diaria-avatar-dd-bola-teal` | disco teal, d.. branco, transparente | favicon sempre-visível |
+| `diaria-avatar-dd-bola-preta-fundo-branco` | quadrado branco + círculo escuro | |
+| `diaria-avatar-dd-anel` | contorno (anel), transparente | marca d'água |
 
-Cada ocorrência do avatar antigo tem um substituto d.. equivalente. Os arquivos
-antigos (`diaria-avatar-*` sem `dd`) ficam preservados até você trocar.
+Os `bola-*` transparentes servem tanto de avatar quanto de favicon (tamanhos 16/32/64 inclusos). Como são transparentes, cada um "some" sobre fundo da mesma cor — a `bola-teal` é a mais segura pra qualquer superfície.
 
-## Tratamentos (cada um em SVG + PNG 64/180/320/512/1024/1080)
+## Substituição do avatar antigo (d.)
+`diaria-avatar.svg` / `-180/320/512/1080.png` / `-bola-preta.png` / `-bola-preta-fundo-papel.png` (a marca **d.** antiga) → equivalentes `diaria-avatar-dd-*`. Os antigos ficam preservados até você trocar.
 
-| Nome | Descrição |
-|---|---|
-| `diaria-avatar-dd` | círculo **branco** inscrito em quadrado escuro — o avatar principal |
-| `diaria-avatar-dd-bola-preta` | disco escuro, "d.." branco, **fundo transparente** — mais versátil |
-| `diaria-avatar-dd-bola-preta-fundo-branco` | quadrado branco + disco preto + "d.." branco |
-| `diaria-avatar-dd-anel` | só o contorno (anel), "d.." ink, fundo transparente — novo |
-
-## Extras
-- Tamanho **64** (favicon/tab) e **1024** adicionados além dos originais.
-- **SVG** para todos os 4 tratamentos (antes só o principal tinha SVG) — escala infinita.
-
-> Onde usar cada um: perfis com foto redonda/quadrada → `bola-preta` (transparente) ou `dd` (círculo branco). Fundo claro do app → `bola-preta-fundo-branco`. Marca d'água/contorno → `anel`.
+## Regenerar
+Espelhado no repo `diaria-design` (`assets/avatar/` + `scripts/gen-avatar.mjs`). Mudar a proporção = mudar `PROPORTION` no script e regenerar.

@@ -6,7 +6,9 @@
   "description": "Reproducible PNG export for the Diar.ia logo assets, rendered from the canonical SVGs.",
   "scripts": {
     "export": "node export-logos.mjs",
-    "check": "node export-logos.mjs --check"
+    "check": "node export-logos.mjs --check",
+    "gen-avatar": "node gen-avatar.mjs",
+    "check-avatar": "node gen-avatar.mjs --check"
   },
   "dependencies": {
     "@resvg/resvg-js": "2.6.2",
