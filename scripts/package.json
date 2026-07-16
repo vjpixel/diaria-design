@@ -9,6 +9,6 @@
     "check": "node export-logos.mjs --check"
   },
   "dependencies": {
-    "@resvg/resvg-js": "^2.6.2"
+    "@resvg/resvg-js": "2.6.2"
   }
 }
