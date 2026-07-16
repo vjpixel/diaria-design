@@ -55,74 +55,55 @@ const SERIF = "Georgia, 'Times New Roman', serif"
 
 export const BANNERS = [
   { key: 'facebook', file: 'facebook-cover-1640x624.png', w: 1640, h: 624, layout: 'centered', bg: PAPER },
-  { key: 'linkedin-diaria', file: 'linkedin-cover-2256x382.png', w: 2256, h: 382, layout: 'side', bg: PAPER },
-  // LinkedIn pessoal e X sobrepõem o avatar no canto inferior ESQUERDO; o
-  // layout centered mantém wordmark/tagline no centro e o CTA à direita, então
-  // nada essencial cai na zona coberta — sem offset especial.
+  { key: 'linkedin-diaria', file: 'linkedin-cover-2256x382.png', w: 2256, h: 382, layout: 'centered', bg: PAPER },
+  // LinkedIn (empresa e pessoal), Facebook e X sobrepõem o avatar/logo no
+  // canto inferior ESQUERDO do banner. O layout centered não tem NENHUM
+  // conteúdo nessa zona (tudo fica centralizado ou no topo/direita) — sem
+  // offset especial necessário em nenhum caso.
   { key: 'linkedin-pessoal', file: 'linkedin-cover-pessoal-3168x792.png', w: 3168, h: 792, layout: 'centered', bg: PAPER },
   { key: 'twitter', file: 'twitter-header-1500x500.png', w: 1500, h: 500, layout: 'centered', bg: PAPER },
   { key: 'apoiase', file: 'apoiase-cover-4800x900.png', w: 4800, h: 900, layout: 'dark', bg: INK },
-  { key: 'umapenca-desktop', file: 'umapenca-banner-desktop-1920x400.png', w: 1920, h: 400, layout: 'side', bg: PAPER },
+  { key: 'umapenca-desktop', file: 'umapenca-banner-desktop-1920x400.png', w: 1920, h: 400, layout: 'centered', bg: PAPER },
   { key: 'umapenca-mobile', file: 'umapenca-banner-mobile-1250x400.png', w: 1250, h: 400, layout: 'centered', bg: PAPER },
 ]
 
 const escXml = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-
-// --- wordmark (mirrors assets/logo/logo.svg tspan structure) -----------------
-function wordmark(x, y, size, anchor = 'middle', dark = false) {
-  const base = dark ? PAPER : INK
-  return `<text x="${x}" y="${y}" text-anchor="${anchor}" font-family="${SERIF}" font-weight="700" font-size="${size}"><tspan fill="${base}">diar</tspan><tspan fill="${TEAL}">.</tspan><tspan fill="${base}">ia</tspan><tspan fill="${TEAL}">.br</tspan></text>`
-}
 
 function mono(x, y, size, text, { anchor = 'middle', fill = INK, tracking = '0.18em', weight = 500 } = {}) {
   return `<text x="${x}" y="${y}" text-anchor="${anchor}" font-family="${MONO}" font-weight="${weight}" font-size="${size}" letter-spacing="${tracking}" fill="${fill}">${escXml(text)}</text>`
 }
 
 // --- layouts -----------------------------------------------------------------
-// centered: eyebrow row + rule / wordmark / tagline / soft rule / serif CTA.
-// Mirrors the previous Facebook cover composition.
+// centered: eyebrow row + rule / tagline (hero, 2 linhas) / soft rule / serif
+// CTA. Única composição pra todo banner claro (Facebook, LinkedIn empresa e
+// pessoal, X, Uma Penca).
+//
+// #3577 hotfix (260716, decisão do editor após reportar colisão ao vivo no
+// LinkedIn): a wordmark serifada "diar.ia.br" foi REMOVIDA do banner —
+// virou redundante desde que passamos a sempre parear banner com avatar
+// (o avatar já carrega a marca "d..", e a própria plataforma exibe o nome
+// da página ao lado dele). Menos elemento competindo por espaço também
+// elimina de raiz a classe de bug "wordmark colide com o avatar overlay que
+// LinkedIn/Facebook/X desenham por cima do canto inferior esquerdo do
+// banner" — não há mais necessidade de zona seguem por design de qualquer
+// tipo. A tagline em duas linhas vira o conteúdo principal (hero); o CTA
+// "Assine grátis em diar.ia.br" no rodapé permanece — é call-to-action com
+// o domínio como texto simples, não repetição do logotipo.
 function layoutCentered(b) {
   const { w, h } = b
   const mx = Math.round(w * 0.06)
   const eyebrowSize = Math.round(h * 0.034)
-  const wordmarkSize = Math.round(h * 0.23)
-  const taglineSize = Math.min(Math.round(h * 0.045), Math.round((w - 2 * mx) / (TAGLINE.length * 0.72)))
-  const ctaSize = Math.round(h * 0.058)
+  const maxLineLen = Math.max(TAGLINE_L1.length, TAGLINE_L2.length)
+  const taglineSize = Math.min(Math.round(h * 0.075), Math.round((w - 2 * mx) / (maxLineLen * 0.66)))
+  const ctaSize = Math.round(h * 0.05)
   return `
   ${mono(mx, h * 0.135, eyebrowSize, EYEBROW_LEFT, { anchor: 'start', tracking: '0.22em' })}
   ${mono(w - mx, h * 0.135, eyebrowSize, EYEBROW_RIGHT, { anchor: 'end', tracking: '0.22em' })}
   <rect x="${mx}" y="${h * 0.175}" width="${w - 2 * mx}" height="${Math.max(2, h * 0.005)}" fill="${INK}"/>
-  ${wordmark(w / 2, h * 0.46, wordmarkSize)}
-  ${mono(w / 2, h * 0.655, taglineSize, TAGLINE)}
-  <rect x="${mx}" y="${h * 0.76}" width="${w - 2 * mx}" height="${Math.max(1, h * 0.0025)}" fill="${RULE_SOFT}"/>
-  <text x="${w - mx}" y="${h * 0.885}" text-anchor="end" font-family="${SERIF}" font-weight="700" font-size="${ctaSize}"><tspan fill="${INK}">${escXml(CTA_PREFIX)}</tspan><tspan fill="${TEAL}">${escXml(CTA_DOMAIN)}</tspan></text>`
-}
-
-// side: wordmark left, tagline block right — for very wide/short strips
-// (LinkedIn company, Uma Penca desktop). Mirrors the previous LinkedIn cover
-// composition.
-//
-// #3577 hotfix (260716, reportado pelo editor via screenshot ao vivo do
-// LinkedIn): plataformas com banner+avatar sobrepostos (LinkedIn, Facebook,
-// X/Twitter) desenham o avatar/logo circular por CIMA do canto inferior
-// esquerdo do banner. A composição original colocava a wordmark baixa
-// (baseline em 0.56h) exatamente nessa zona — mal cabia antes do avatar
-// cobrir, ficou visualmente apertado tanto no desktop quanto no mobile do
-// LinkedIn (mesma imagem, mesmo recorte relativo). Fix: todo o bloco
-// (wordmark + tagline) sobe pro terço superior do banner, deixando o terço
-// inferior esquerdo — a zona coberta pelo avatar em qualquer plataforma que
-// faça esse overlay — inteiramente livre de conteúdo essencial.
-function layoutSide(b) {
-  const { w, h } = b
-  const mx = Math.round(w * 0.05)
-  const wordmarkSize = Math.round(h * 0.34)
-  const taglineSize = Math.round(h * 0.078)
-  const subSize = Math.round(h * 0.062)
-  return `
-  ${wordmark(mx, h * 0.36, wordmarkSize, 'start')}
-  ${mono(w - mx, h * 0.26, taglineSize, TAGLINE_L1, { anchor: 'end', tracking: '0.14em' })}
-  ${mono(w - mx, h * 0.42, taglineSize, TAGLINE_L2, { anchor: 'end', tracking: '0.14em' })}
-  ${mono(w - mx, h * 0.6, subSize, EYEBROW_RIGHT + ' · ' + EYEBROW_LEFT, { anchor: 'end', tracking: '0.2em', fill: '#6B655C' })}`
+  ${mono(w / 2, h * 0.44, taglineSize, TAGLINE_L1, { tracking: '0.06em' })}
+  ${mono(w / 2, h * 0.58, taglineSize, TAGLINE_L2, { tracking: '0.06em' })}
+  <rect x="${mx}" y="${h * 0.78}" width="${w - 2 * mx}" height="${Math.max(1, h * 0.0025)}" fill="${RULE_SOFT}"/>
+  <text x="${w - mx}" y="${h * 0.9}" text-anchor="end" font-family="${SERIF}" font-weight="700" font-size="${ctaSize}"><tspan fill="${INK}">${escXml(CTA_PREFIX)}</tspan><tspan fill="${TEAL}">${escXml(CTA_DOMAIN)}</tspan></text>`
 }
 
 // dark: teal pill + white tagline + quiet sub — Apoia.se composition.
@@ -141,7 +122,7 @@ function layoutDark(b) {
   ${mono(w / 2, h * 0.68, subSize, EYEBROW_RIGHT, { fill: '#B8B2A6', tracking: '0.3em' })}`
 }
 
-const LAYOUTS = { centered: layoutCentered, side: layoutSide, dark: layoutDark }
+const LAYOUTS = { centered: layoutCentered, dark: layoutDark }
 
 export function bannerSvg(b) {
   return `<?xml version="1.0"?>
