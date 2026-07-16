@@ -22,7 +22,7 @@
 //   Uma Penca (Personalização→Tema, UI logada 2026-07-16):
 //     banner desktop: largura OBRIGATÓRIA 1920px, recomendado 1920×400
 //     banner mobile:  largura OBRIGATÓRIA 1250px, recomendado 1250×400
-//     (altura é livre; cor de fundo do banner configurável na UI — usar PAPER #FBFAF6)
+//     (altura é livre; cor de fundo do banner configurável na UI — usar PAPER #FFFFFF)
 //
 // Usage:  node gen-banners.mjs [--only facebook] [--out <dir>]
 //         node gen-banners.mjs --check     # structural invariants only (CI, no fonts needed)
@@ -37,7 +37,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const REPO = join(__dirname, '..')
 const OUT_DIR_DEFAULT = join(REPO, 'assets', 'banners')
 
-const PAPER = '#FBFAF6'
+const PAPER = '#FFFFFF' // #3577 hotfix (260716): editor pediu fundo branco puro (era #FBFAF6 creme) pra casar sem transição visível com o avatar bola-preta-fundo-branco
 const INK = '#171411'
 const TEAL = '#00A0A0'
 const RULE_SOFT = '#DDD8CE'
@@ -99,18 +99,30 @@ function layoutCentered(b) {
 }
 
 // side: wordmark left, tagline block right — for very wide/short strips
-// (LinkedIn company). Mirrors the previous LinkedIn cover composition.
+// (LinkedIn company, Uma Penca desktop). Mirrors the previous LinkedIn cover
+// composition.
+//
+// #3577 hotfix (260716, reportado pelo editor via screenshot ao vivo do
+// LinkedIn): plataformas com banner+avatar sobrepostos (LinkedIn, Facebook,
+// X/Twitter) desenham o avatar/logo circular por CIMA do canto inferior
+// esquerdo do banner. A composição original colocava a wordmark baixa
+// (baseline em 0.56h) exatamente nessa zona — mal cabia antes do avatar
+// cobrir, ficou visualmente apertado tanto no desktop quanto no mobile do
+// LinkedIn (mesma imagem, mesmo recorte relativo). Fix: todo o bloco
+// (wordmark + tagline) sobe pro terço superior do banner, deixando o terço
+// inferior esquerdo — a zona coberta pelo avatar em qualquer plataforma que
+// faça esse overlay — inteiramente livre de conteúdo essencial.
 function layoutSide(b) {
   const { w, h } = b
   const mx = Math.round(w * 0.05)
-  const wordmarkSize = Math.round(h * 0.42)
-  const taglineSize = Math.round(h * 0.085)
-  const subSize = Math.round(h * 0.07)
+  const wordmarkSize = Math.round(h * 0.34)
+  const taglineSize = Math.round(h * 0.078)
+  const subSize = Math.round(h * 0.062)
   return `
-  ${wordmark(mx, h * 0.56, wordmarkSize, 'start')}
-  ${mono(w - mx, h * 0.38, taglineSize, TAGLINE_L1, { anchor: 'end', tracking: '0.14em' })}
-  ${mono(w - mx, h * 0.56, taglineSize, TAGLINE_L2, { anchor: 'end', tracking: '0.14em' })}
-  ${mono(w - mx, h * 0.78, subSize, EYEBROW_RIGHT + ' · ' + EYEBROW_LEFT, { anchor: 'end', tracking: '0.2em', fill: '#6B655C' })}`
+  ${wordmark(mx, h * 0.36, wordmarkSize, 'start')}
+  ${mono(w - mx, h * 0.26, taglineSize, TAGLINE_L1, { anchor: 'end', tracking: '0.14em' })}
+  ${mono(w - mx, h * 0.42, taglineSize, TAGLINE_L2, { anchor: 'end', tracking: '0.14em' })}
+  ${mono(w - mx, h * 0.6, subSize, EYEBROW_RIGHT + ' · ' + EYEBROW_LEFT, { anchor: 'end', tracking: '0.2em', fill: '#6B655C' })}`
 }
 
 // dark: teal pill + white tagline + quiet sub — Apoia.se composition.
