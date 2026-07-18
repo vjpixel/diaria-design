@@ -55,7 +55,10 @@ const SERIF = "Georgia, 'Times New Roman', serif"
 
 export const BANNERS = [
   { key: 'facebook', file: 'facebook-cover-1640x624.png', w: 1640, h: 624, layout: 'centered', bg: PAPER },
-  { key: 'linkedin-diaria', file: 'linkedin-cover-2256x382.png', w: 2256, h: 382, layout: 'centered', bg: PAPER },
+  // #3577 hotfix rodada 3 (260718): editor pediu só a tagline, sem eyebrow
+  // row (NEWSLETTER GRATUITA / SEG–SEX) nem CTA de rodapé — layout dedicado
+  // 'minimal' em vez de reusar 'centered' (que os outros banners ainda usam).
+  { key: 'linkedin-diaria', file: 'linkedin-cover-2256x382.png', w: 2256, h: 382, layout: 'minimal', bg: PAPER },
   // LinkedIn (empresa e pessoal), Facebook e X sobrepõem o avatar/logo no
   // canto inferior ESQUERDO do banner. O layout centered não tem NENHUM
   // conteúdo nessa zona (tudo fica centralizado ou no topo/direita) — sem
@@ -109,6 +112,19 @@ function layoutCentered(b) {
   <text x="${w - mx}" y="${h * 0.9}" text-anchor="end" font-family="${SERIF}" font-weight="700" font-size="${ctaSize}"><tspan fill="${INK}">${escXml(CTA_PREFIX)}</tspan><tspan fill="${TEAL}">${escXml(CTA_DOMAIN)}</tspan></text>`
 }
 
+// minimal: só a tagline (hero, 2 linhas), sem eyebrow row nem CTA de rodapé
+// — pedido do editor (#3577 rodada 3, 260718) especificamente pro banner do
+// LinkedIn da empresa. Vertical-centered no canvas inteiro.
+function layoutMinimal(b) {
+  const { w, h } = b
+  const mx = Math.round(w * 0.06)
+  const maxLineLen = Math.max(TAGLINE_L1.length, TAGLINE_L2.length)
+  const taglineSize = Math.min(Math.round(h * 0.17), Math.round((w - 2 * mx) / (maxLineLen * 0.66)))
+  return `
+  ${mono(w / 2, h * 0.46, taglineSize, TAGLINE_L1, { tracking: '0.04em' })}
+  ${mono(w / 2, h * 0.66, taglineSize, TAGLINE_L2, { tracking: '0.04em' })}`
+}
+
 // dark: teal pill + white tagline + quiet sub — Apoia.se composition.
 function layoutDark(b) {
   const { w, h } = b
@@ -125,7 +141,7 @@ function layoutDark(b) {
   ${mono(w / 2, h * 0.68, subSize, EYEBROW_RIGHT, { fill: '#B8B2A6', tracking: '0.3em' })}`
 }
 
-const LAYOUTS = { centered: layoutCentered, dark: layoutDark }
+const LAYOUTS = { centered: layoutCentered, minimal: layoutMinimal, dark: layoutDark }
 
 export function bannerSvg(b) {
   return `<?xml version="1.0"?>
