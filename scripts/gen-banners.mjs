@@ -49,6 +49,13 @@ const EYEBROW_LEFT = 'NEWSLETTER GRATUITA'
 const EYEBROW_RIGHT = 'SEG–SEX'
 const CTA_PREFIX = 'Assine grátis em '
 const CTA_DOMAIN = 'diar.ia.br'
+// Voz de AUTOR (260719): nos perfis PESSOAIS do editor a capa não é a capa da
+// marca — quem visita já sabe quem é a pessoa, e o que falta é a ligação entre
+// ela e a newsletter. Mesma tagline (o plano de lançamento manda repetir a
+// proposta de valor em todo canal), só o CTA muda de "assine" pra primeira
+// pessoa. Não usar a wordmark em mono/caixa-alta aqui: "diar.ia.br" só aparece
+// como texto serifado com o domínio em teal, que é o que o CTA já faz.
+const CTA_PREFIX_AUTOR = 'Escrevo todo dia em '
 
 const MONO = 'Geist Mono'
 const SERIF = "Georgia, 'Times New Roman', serif"
@@ -58,13 +65,35 @@ export const BANNERS = [
   // #3577 hotfix rodada 3 (260718): editor pediu só a tagline, sem eyebrow
   // row (NEWSLETTER GRATUITA / SEG–SEX) nem CTA de rodapé — layout dedicado
   // 'minimal' em vez de reusar 'centered' (que os outros banners ainda usam).
-  { key: 'linkedin-diaria', file: 'linkedin-cover-2256x382.png', w: 2256, h: 382, layout: 'minimal', bg: PAPER },
+  //
+  // `pad`: descoberto ao vivo no editor de capa do LinkedIn (260718) — o
+  // canvas de upload/crop da página de EMPRESA não é 1128×191 (a proporção
+  // exibida no desktop), é ~1128×590 (medido via canvas.width/height do DOM
+  // do próprio editor: 2256×1179 em 2×) — LinkedIn guarda um "master" mais
+  // alto e recorta faixas diferentes por superfície (desktop largo, app
+  // mobile mais quadrado). Sem isso, um PNG exatamente 2256×382 fica
+  // "sobrando" no centro do canvas de 1179px com as bordas fora da imagem
+  // renderizadas em PRETO pelo editor — arriscado (podia virar barra preta
+  // publicada dependendo da superfície). Em vez de reajustar a tipografia
+  // pro canvas alto (mudaria o tamanho validado visualmente), `pad` mantém
+  // `w`×`h` como a arte já aprovada e soma fundo branco (mesma `bg`) em
+  // volta até preencher `pad.h` — a tagline permanece exatamente onde já
+  // foi validada, centralizada verticalmente no canvas maior.
+  { key: 'linkedin-diaria', file: 'linkedin-cover-2256x382.png', w: 2256, h: 382, layout: 'minimal', bg: PAPER, pad: { w: 2256, h: 1179 } },
   // LinkedIn (empresa e pessoal), Facebook e X sobrepõem o avatar/logo no
   // canto inferior ESQUERDO do banner. O layout centered não tem NENHUM
   // conteúdo nessa zona (tudo fica centralizado ou no topo/direita) — sem
   // offset especial necessário em nenhum caso.
   { key: 'linkedin-pessoal', file: 'linkedin-cover-pessoal-3168x792.png', w: 3168, h: 792, layout: 'centered', bg: PAPER },
   { key: 'twitter', file: 'twitter-header-1500x500.png', w: 1500, h: 500, layout: 'centered', bg: PAPER },
+  // Variantes de AUTOR — perfis pessoais do editor (LinkedIn 3.078, Facebook
+  // 2.200, X 1.351). Mesmas dimensões das capas de marca equivalentes; só o
+  // CTA muda (ver CTA_PREFIX_AUTOR). As páginas de terceiros que ele
+  // administra (VJ Pixel, memeLab) usam as capas de MARCA, não estas: lá a
+  // primeira pessoa não corresponde a quem assina a página.
+  { key: 'linkedin-autor', file: 'linkedin-cover-autor-3168x792.png', w: 3168, h: 792, layout: 'centered', bg: PAPER, ctaPrefix: CTA_PREFIX_AUTOR },
+  { key: 'facebook-autor', file: 'facebook-cover-autor-1640x624.png', w: 1640, h: 624, layout: 'centered', bg: PAPER, ctaPrefix: CTA_PREFIX_AUTOR },
+  { key: 'twitter-autor', file: 'twitter-header-autor-1500x500.png', w: 1500, h: 500, layout: 'centered', bg: PAPER, ctaPrefix: CTA_PREFIX_AUTOR },
   { key: 'apoiase', file: 'apoiase-cover-4800x900.png', w: 4800, h: 900, layout: 'dark', bg: INK },
   { key: 'umapenca-desktop', file: 'umapenca-banner-desktop-1920x400.png', w: 1920, h: 400, layout: 'centered', bg: PAPER },
   { key: 'umapenca-mobile', file: 'umapenca-banner-mobile-1250x400.png', w: 1250, h: 400, layout: 'centered', bg: PAPER },
@@ -94,6 +123,7 @@ function mono(x, y, size, text, { anchor = 'middle', fill = INK, tracking = '0.1
 // o domínio como texto simples, não repetição do logotipo.
 function layoutCentered(b) {
   const { w, h } = b
+  const ctaPrefix = b.ctaPrefix ?? CTA_PREFIX
   const mx = Math.round(w * 0.06)
   const eyebrowSize = Math.round(h * 0.034)
   const maxLineLen = Math.max(TAGLINE_L1.length, TAGLINE_L2.length)
@@ -109,7 +139,7 @@ function layoutCentered(b) {
   ${mono(w / 2, h * 0.4, taglineSize, TAGLINE_L1, { tracking: '0.04em' })}
   ${mono(w / 2, h * 0.6, taglineSize, TAGLINE_L2, { tracking: '0.04em' })}
   <rect x="${mx}" y="${h * 0.78}" width="${w - 2 * mx}" height="${Math.max(1, h * 0.0025)}" fill="${RULE_SOFT}"/>
-  <text x="${w - mx}" y="${h * 0.9}" text-anchor="end" font-family="${SERIF}" font-weight="700" font-size="${ctaSize}"><tspan fill="${INK}">${escXml(CTA_PREFIX)}</tspan><tspan fill="${TEAL}">${escXml(CTA_DOMAIN)}</tspan></text>`
+  <text x="${w - mx}" y="${h * 0.9}" text-anchor="end" font-family="${SERIF}" font-weight="700" font-size="${ctaSize}"><tspan fill="${INK}">${escXml(ctaPrefix)}</tspan><tspan fill="${TEAL}">${escXml(CTA_DOMAIN)}</tspan></text>`
 }
 
 // minimal: só a tagline (hero, 2 linhas), sem eyebrow row nem CTA de rodapé
@@ -143,11 +173,23 @@ function layoutDark(b) {
 
 const LAYOUTS = { centered: layoutCentered, minimal: layoutMinimal, dark: layoutDark }
 
+/** Dimensões do PNG final — `pad` (quando presente) substitui `w`×`h`, que
+ * viram só o canvas INTERNO usado pela matemática de layout (ver BANNERS). */
+export const outW = (b) => (b.pad ? b.pad.w : b.w)
+export const outH = (b) => (b.pad ? b.pad.h : b.h)
+
 export function bannerSvg(b) {
-  return `<?xml version="1.0"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="${b.w}" height="${b.h}" viewBox="0 0 ${b.w} ${b.h}">
+  const W = outW(b)
+  const H = outH(b)
+  const content = `
   <rect width="${b.w}" height="${b.h}" fill="${b.bg}"/>
-  ${LAYOUTS[b.layout](b)}
+  ${LAYOUTS[b.layout](b)}`
+  const body = b.pad
+    ? `<rect width="${W}" height="${H}" fill="${b.bg}"/><g transform="translate(${(W - b.w) / 2}, ${(H - b.h) / 2})">${content}</g>`
+    : content
+  return `<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+  ${body}
 </svg>`
 }
 
@@ -189,8 +231,9 @@ function check(outDir) {
     const p = join(outDir, b.file)
     if (!existsSync(p)) { console.error(`MISSING ${b.file}`); bad++; continue }
     const png = PNG.sync.read(readFileSync(p))
-    if (png.width !== b.w || png.height !== b.h) {
-      console.error(`DIM ${b.file}: ${png.width}x${png.height} != ${b.w}x${b.h}`); bad++
+    const [W, H] = [outW(b), outH(b)]
+    if (png.width !== W || png.height !== H) {
+      console.error(`DIM ${b.file}: ${png.width}x${png.height} != ${W}x${H}`); bad++
     }
     // ink presence: some pixel must differ from the background fill.
     const bgIsDark = b.bg === INK
@@ -219,6 +262,6 @@ if (args.includes('--check')) {
     if (only && b.key !== only) continue
     const png = render(b, fonts)
     writeFileSync(join(outDir, b.file), png)
-    console.log(`${b.file}  ${b.w}x${b.h}  (${(png.length / 1024).toFixed(0)} KB)`)
+    console.log(`${b.file}  ${outW(b)}x${outH(b)}  (${(png.length / 1024).toFixed(0)} KB)`)
   }
 }
