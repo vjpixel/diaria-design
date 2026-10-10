@@ -64,3 +64,15 @@ O `3307px` corresponde à largura A4 curta (210 mm) a 400 DPI, para print.
 1. Coloque o `{slug}.svg` em `assets/logo/` (e no espelho `logo/`).
 2. Adicione o `slug` a `WORDMARKS` ou `ICONS` em `export-logos.mjs`.
 3. `npm run export`.
+
+## sync-edition-template.mjs
+
+Regenera `Diar.ia Email Template.html` e `Diar.ia Edição.html` a partir de uma
+edição diária real renderizada pelo diaria-studio. Sem dependências (Node 18+).
+
+```
+node scripts/sync-edition-template.mjs ~/diaria-studio/data/editions/2610/261009/_internal/newsletter-final.html
+```
+
+Baixa as imagens para `assets/edition/` (removendo as órfãs), troca merge tags
+por um e-mail de exemplo e grava os dois templates idênticos.

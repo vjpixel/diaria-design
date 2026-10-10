@@ -33,6 +33,12 @@ Hierarquia de texto por **tamanho/peso**, não por cor.
 (`Diar.ia Edição.html` = `Diar.ia Email Template.html`). A **mensal** é só e-mail
 (`Diar.ia Edição Mensal.html`). Nunca crie um design web diferente do e-mail.
 
+Os dois templates da diária são **gerados**, não escritos à mão: snapshot de uma
+edição real renderizada pelo diaria-studio (`scripts/render-newsletter-html.ts`),
+que é quem manda no visual de produção (diaria-design#19). Para atualizar:
+`node scripts/sync-edition-template.mjs <data/editions/AAMM/AAMMDD/_internal/newsletter-final.html>`.
+Mudança visual da diária se faz no renderer do studio, nunca editando o template.
+
 ## Guardrails de marca
 Voz editorial em PT-BR · títulos em sentence-case com KICKERS MONO MAIÚSCULOS ·
 manchetes em serifa **Georgia** · itálico (às vezes teal) para ênfase · superfícies
