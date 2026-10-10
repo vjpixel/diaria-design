@@ -74,5 +74,13 @@ edição diária real renderizada pelo diaria-studio. Sem dependências (Node 18
 node scripts/sync-edition-template.mjs ~/diaria-studio/data/editions/2610/261009/_internal/newsletter-final.html
 ```
 
-Baixa as imagens para `assets/edition/` (removendo as órfãs), troca merge tags
-por um e-mail de exemplo e grava os dois templates idênticos.
+Precisa de rede (baixa as imagens para `assets/edition/`). Troca a merge tag de
+e-mail por um exemplo e aborta em qualquer outra tag ou imagem remota que não
+consiga localizar — tudo validado antes de escrever. Grava os dois templates
+idênticos e remove só as imagens geradas pelo próprio script que ficaram órfãs.
+O título leva o número da edição.
+
+`node scripts/sync-edition-template.mjs --check` (sem rede, sem escrita) valida o
+contrato: templates idênticos, com cabeçalho de gerado, sem imagem remota nem
+merge tag, todas as imagens presentes e nenhuma órfã. Roda no CI
+(`.github/workflows/edition-template-check.yml`).

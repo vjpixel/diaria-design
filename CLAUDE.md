@@ -22,6 +22,9 @@ Quem for criar e-mails, slides, landing pages, posts ou telas deve **partir daqu
 Ink `#171411` (todo o texto + rodapé) · Bege `#EBE5D0` (moldura, boxes e fios) ·
 Papel `#FBFAF6` (fundo, quase-branco) · Teal `#00A0A0` (único acento, com parcimônia).
 Hierarquia de texto por **tamanho/peso**, não por cor.
+No **e-mail diário** (e no espelho web, que é o mesmo HTML) o fundo é branco `#FFFFFF`,
+sem moldura bege: papel/bege ficam só nas caixas. Papel-sobre-bege vale na web/mensal
+(ver "Convenções de e-mail" no `readme.md`).
 
 ## Caixas (dois templates)
 - **Contorno** — fundo papel + linha bege 1px. Uso: "Por que isso importa".
