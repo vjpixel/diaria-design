@@ -108,8 +108,9 @@ As lombadas de livros são blocos de cor sólida com sombra interna nas bordas
 ## Convenções de e-mail
 
 O e-mail (Beehiiv) tem restrições de cliente que sobrescrevem algumas escolhas
-de superfície web. Consumidor de referência: `Diar.ia Email Template.html` +
-`diaria-studio/scripts/render-newsletter-html.ts`.
+de superfície web. Fonte da verdade: `diaria-studio/scripts/render-newsletter-html.ts`;
+`Diar.ia Email Template.html` é um snapshot gerado dele por
+`scripts/sync-edition-template.mjs` (diaria-design#19).
 
 - **Superfícies (#3):** o e-mail é **branco** — card (`.container`) `#FFFFFF` sobre
   página `#FFFFFF`, **sem trilhos laterais**. O token `--paper` (#FBFAF6) e a

@@ -1,0 +1,25 @@
+name: edition-template-check
+
+# Falha se os templates da edição diária forem editados à mão, divergirem
+# entre si ou apontarem para imagem remota/ausente (diaria-design#19).
+# Eles são gerados por scripts/sync-edition-template.mjs — ver scripts/README.md.
+
+on:
+  pull_request:
+    paths:
+      - 'Diar.ia Edição.html'
+      - 'Diar.ia Email Template.html'
+      - 'assets/edition/**'
+      - 'scripts/sync-edition-template.mjs'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: check edition templates
+        run: node scripts/sync-edition-template.mjs --check
