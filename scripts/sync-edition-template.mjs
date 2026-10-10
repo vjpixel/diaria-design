@@ -16,7 +16,7 @@
 // (variante web/Beehiiv, não a `-kit`). Ela ainda traz a merge tag de e-mail
 // dos links de voto do "É IA?" (`{{email}}`).
 //
-// O que faz (tudo validado ANTES de escrever qualquer coisa):
+// O que faz (tags e imagens não-cobertas são validadas ANTES de qualquer escrita):
 //   1. baixa toda <img src="https://..."> para assets/edition/ (nome estável
 //      por hash do URL) e reescreve o src para o caminho local; aborta se
 //      sobrar qualquer imagem remota que o padrão não cobriu (srcset, url(),
@@ -27,7 +27,7 @@
 //   3. envolve o corpo num documento HTML completo e grava
 //      `Diar.ia Email Template.html` e `Diar.ia Edição.html` — idênticos;
 //   4. remove de assets/edition/ só as IMAGENS GERADAS por este script
-//      (padrão `-<8 hex>.<ext>`) que nenhum template referencia, listando
+//      (padrão `--<8 hex>.<ext>`) que nenhum template referencia, listando
 //      cada uma. Outros arquivos da pasta nunca são tocados.
 
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, unlinkSync, existsSync, statSync, renameSync } from "node:fs";
@@ -40,7 +40,9 @@ const ASSET_DIR = join(ROOT, "assets", "edition");
 const OUTPUTS = ["Diar.ia Email Template.html", "Diar.ia Edição.html"];
 const SAMPLE_EMAIL = "leitor@exemplo.com";
 const EMAIL_TAG = /\{\{\s*(?:email|subscriber\.email_address|subscriber\.email)\s*\}\}/g;
-const GENERATED_ASSET = /-[0-9a-f]{8}\.(?:jpe?g|png|webp|gif)$/i;
+// Sufixo `--<8 hex>` (traço DUPLO) marca arquivo gerado — não colide com datas
+// tipo `capa-20261009.jpg` que alguém ponha à mão na pasta.
+const GENERATED_ASSET = /--[0-9a-f]{8}\.(?:jpe?g|png|webp|gif)$/i;
 const EXT_BY_TYPE = { "image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp", "image/gif": ".gif" };
 const FETCH_TIMEOUT_MS = 30_000;
 
@@ -69,13 +71,15 @@ if (process.argv.includes("--check")) {
   const problems = [];
   const docs = OUTPUTS.map((f) => {
     const p = join(ROOT, f);
-    if (!existsSync(p)) { problems.push(`${f} não existe`); return ""; }
-    return readFileSync(p, "utf8");
+    if (!existsSync(p)) { problems.push(`${f} não existe`); return null; }
+    const d = readFileSync(p, "utf8");
+    if (!d.trim()) problems.push(`${f} vazio`);
+    return d;
   });
-  if (docs[0] !== docs[1]) problems.push(`${OUTPUTS[0]} e ${OUTPUTS[1]} divergem — rode o sync, não edite à mão`);
+  if (docs[0] !== null && docs[1] !== null && docs[0] !== docs[1]) problems.push(`${OUTPUTS[0]} e ${OUTPUTS[1]} divergem — rode o sync, não edite à mão`);
   const refs = new Set();
   docs.forEach((d, i) => {
-    if (!d) return;
+    if (!d || !d.trim()) return;
     if (!/^<!doctype html>/i.test(d) || !/class="container"/.test(d)) problems.push(`${OUTPUTS[i]} não tem a forma de um template gerado`);
     if (!d.includes("GERADO por scripts/sync-edition-template.mjs")) problems.push(`${OUTPUTS[i]} sem o cabeçalho de arquivo gerado`);
     for (const r of remoteImageRefs(d)) problems.push(`${OUTPUTS[i]}: imagem remota ${r}`);
@@ -122,6 +126,12 @@ const decodeAttr = (s) => s.replace(/&amp;/g, "&");
 const rawUrls = [...new Set([...body.matchAll(/<img\b[^>]*\bsrc="(https?:\/\/[^"]+)"/gi)].map((m) => m[1]))];
 if (rawUrls.length === 0) die("nenhuma <img> remota na entrada — render inesperado, abortando antes de mexer em assets/edition/");
 
+// Valida tags e imagens não-cobertas ANTES de baixar/escrever qualquer coisa.
+const unknownTags = body.replace(EMAIL_TAG, SAMPLE_EMAIL).match(/\{\{[^}]*\}\}|\{%[^%]*%\}|%7B%7B|%7B%25/gi);
+if (unknownTags) die(`merge tags não tratadas: ${[...new Set(unknownTags)].join(", ")}`);
+const uncovered = remoteImageRefs(rawUrls.reduce((h, u) => h.split(`src="${u}"`).join('src=""'), body));
+if (uncovered.length) die(`imagens remotas que o script não cobre: ${uncovered.join(", ")}`);
+
 mkdirSync(ASSET_DIR, { recursive: true });
 const kept = new Set();
 for (const raw of rawUrls) {
@@ -143,7 +153,7 @@ for (const raw of rawUrls) {
   if (!ext) die(`${url} não devolveu imagem suportada (content-type: ${type || "vazio"})`);
   const bytes = Buffer.from(await res.arrayBuffer());
   if (bytes.length === 0) die(`${url} devolveu corpo vazio`);
-  const name = `${stem}-${hash}${ext}`;
+  const name = `${stem}--${hash}${ext}`;
   const dest = join(ASSET_DIR, name);
   const fresh = !existsSync(dest) || !readFileSync(dest).equals(bytes);
   if (fresh) {
@@ -154,13 +164,11 @@ for (const raw of rawUrls) {
   kept.add(name);
   body = body.split(`src="${raw}"`).join(`src="assets/edition/${name}"`);
 }
-const leftover = remoteImageRefs(body);
-if (leftover.length) die(`imagens remotas que o script não cobre: ${leftover.join(", ")}`);
+// Rede de segurança (já validado acima, antes dos downloads).
+if (remoteImageRefs(body).length) die("imagem remota restante após a reescrita — bug no script");
 
-// ---------- 2. merge tags ----------
+// ---------- 2. merge tags (desconhecidas já barradas acima) ----------
 body = body.replace(EMAIL_TAG, SAMPLE_EMAIL);
-const unknownTags = body.match(/\{\{[^}]*\}\}|\{%[^%]*%\}|%7B%7B|%7B%25/gi);
-if (unknownTags) die(`merge tags não tratadas: ${[...new Set(unknownTags)].join(", ")}`);
 
 // ---------- 3. documento completo ----------
 // O render começa com um <style> (hover + mobile); ele vai pro <head>.
