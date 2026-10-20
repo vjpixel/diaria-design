@@ -97,6 +97,8 @@ Brevo viram exemplo (`{{ contact.EMAIL }}` → e-mail de exemplo,
 e-mail Kit dos apoiadores (mesma base, merge tag Liquid) nem a página web da
 Retrospectiva (`monthly-web-render.ts`, HTML semântico, não é e-mail): o DS
 trata a mensal como e-mail, e este é o render mais recente e completo dela.
+O script recusa, antes de escrever, a variante Kit (merge tag `subscriber.*`),
+entrada sem as tags da Brevo e render sem `<title>` (onde entra o cabeçalho).
 
 ### `--check`
 

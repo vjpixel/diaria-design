@@ -25,8 +25,9 @@ paper surfaces with hairline rules instead of shadows, pill buttons/inputs, teal
 sparingly. No gradients, no emoji, no decorative icons or stats.
 
 The daily email (and its web mirror, the same HTML) is pure white `#FFFFFF` with no
-beige frame: paper and beige appear only inside the boxes. Paper-on-beige surfaces are
-for the web (see "Convenções de e-mail" in `readme.md`).
+beige frame: paper and beige appear only inside the boxes. The monthly email is white
+too (diaria-design#21). Paper-on-beige surfaces are for the web only (see "Convenções
+de e-mail" in `readme.md`).
 
 If the user invokes this skill without further guidance, ask what they want to build,
 ask a few focused questions, and act as an expert designer outputting HTML artifacts or

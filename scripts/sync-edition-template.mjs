@@ -179,6 +179,14 @@ if (monthly) {
   if (!/<html[\s>]/i.test(body) || !/<head>/i.test(body)) die("a entrada mensal precisa ser o documento completo do e-mail (cloudflare-preview.html)");
   if (!/class="ds-canvas"/.test(body)) die("a entrada não parece um render do monthly-render.ts (sem .ds-canvas)");
   if (/data:image\//i.test(body)) die("a entrada tem imagens embutidas (data:) — use cloudflare-preview.html, não a variante -embedded");
+  // O título é trocado e o cabeçalho de gerado entra logo depois dele: sem
+  // <title> o arquivo sairia sem cabeçalho. Barrado antes de qualquer escrita.
+  if (!/<title>[\s\S]*?<\/title>/i.test(body)) die("a entrada mensal não tem <title> — sem ele o cabeçalho de gerado não teria onde entrar");
+  // O cabeçalho descreve o e-mail da Clarice News (Brevo). A mesma base sai
+  // também como e-mail Kit dos apoiadores (merge tags Liquid `subscriber.*`):
+  // recusar em vez de gravar um cabeçalho que descreve a variante errada.
+  if (/\{\{\s*subscriber\./.test(body)) die("a entrada é o e-mail Kit dos apoiadores (merge tag subscriber.*) — o template mensal vem do cloudflare-preview.html (Brevo)");
+  if (!/\{\{\s*(?:contact\.EMAIL|unsubscribe)\s*\}\}/.test(body)) die("a entrada não tem as merge tags da Brevo ({{ contact.EMAIL }}/{{ unsubscribe }}) — esperado o cloudflare-preview.html");
 } else {
   if (/<html[\s>]/i.test(body)) die("a entrada já é um documento completo — passe o corpo renderizado (newsletter-final.html)");
   if (!/class="container"/.test(body)) die("a entrada não parece um render do newsletter-render-html.ts (sem .container)");
