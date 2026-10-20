@@ -80,7 +80,30 @@ consiga localizar — tudo validado antes de escrever. Grava os dois templates
 idênticos e remove só as imagens geradas pelo próprio script que ficaram órfãs.
 O título leva o número da edição.
 
+### Modo mensal (`--monthly`, diaria-design#21)
+
+Regenera `Diar.ia Edição Mensal.html` a partir do e-mail mensal real
+(`draftToEmail` em `scripts/lib/mensal/monthly-render.ts` do diaria-studio):
+
+```
+node scripts/sync-edition-template.mjs --monthly ~/diaria-studio/data/monthly/2609-10/_internal/cloudflare-preview.html
+```
+
+A entrada é o documento completo do e-mail da Clarice News (Brevo), não a
+variante `-embedded` (imagens em base64). O ciclo (`AAMM-MM`) sai do caminho
+ou de `--cycle`. Imagens vão para `assets/edition-monthly/`; as merge tags da
+Brevo viram exemplo (`{{ contact.EMAIL }}` → e-mail de exemplo,
+`{{ unsubscribe }}` → âncora `#descadastrar`). Por que essa variante, e não o
+e-mail Kit dos apoiadores (mesma base, merge tag Liquid) nem a página web da
+Retrospectiva (`monthly-web-render.ts`, HTML semântico, não é e-mail): o DS
+trata a mensal como e-mail, e este é o render mais recente e completo dela.
+O script recusa, antes de escrever, a variante Kit (merge tag `subscriber.*`),
+entrada sem as tags da Brevo e render sem `<title>` (onde entra o cabeçalho).
+
+### `--check`
+
 `node scripts/sync-edition-template.mjs --check` (sem rede, sem escrita) valida o
-contrato: templates idênticos, com cabeçalho de gerado, sem imagem remota nem
-merge tag, todas as imagens presentes e nenhuma órfã. Roda no CI
+contrato dos dois templates (diária e mensal): templates da diária idênticos,
+com cabeçalho de gerado, sem imagem remota nem merge tag, todas as imagens
+presentes e nenhuma órfã. Roda no CI
 (`.github/workflows/edition-template-check.yml`).

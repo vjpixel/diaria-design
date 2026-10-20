@@ -23,7 +23,8 @@ Ink `#171411` (todo o texto + rodapé) · Bege `#EBE5D0` (moldura, boxes e fios)
 Papel `#FBFAF6` (fundo, quase-branco) · Teal `#00A0A0` (único acento, com parcimônia).
 Hierarquia de texto por **tamanho/peso**, não por cor.
 No **e-mail diário** (e no espelho web, que é o mesmo HTML) o fundo é branco `#FFFFFF`,
-sem moldura bege: papel/bege ficam só nas caixas. Papel-sobre-bege vale na web/mensal
+sem moldura bege: papel/bege ficam só nas caixas. O e-mail mensal também é branco
+(diaria-design#21). Papel-sobre-bege vale só na web
 (ver "Convenções de e-mail" no `readme.md`).
 
 ## Caixas (dois templates)
@@ -41,6 +42,10 @@ edição real renderizada pelo diaria-studio (`scripts/render-newsletter-html.ts
 que é quem manda no visual de produção (diaria-design#19). Para atualizar:
 `node scripts/sync-edition-template.mjs <data/editions/AAMM/AAMMDD/_internal/newsletter-final.html>`.
 Mudança visual da diária se faz no renderer do studio, nunca editando o template.
+
+O template da **mensal** também é gerado (diaria-design#21): snapshot do e-mail
+mensal real (`scripts/lib/mensal/monthly-render.ts`, `_internal/cloudflare-preview.html`),
+via `node scripts/sync-edition-template.mjs --monthly <data/monthly/AAMM-MM/_internal/cloudflare-preview.html>`.
 
 ## Guardrails de marca
 Voz editorial em PT-BR · títulos em sentence-case com KICKERS MONO MAIÚSCULOS ·

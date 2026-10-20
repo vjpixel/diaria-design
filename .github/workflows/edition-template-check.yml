@@ -1,15 +1,18 @@
 name: edition-template-check
 
-# Falha se os templates da edição diária forem editados à mão, divergirem
-# entre si ou apontarem para imagem remota/ausente (diaria-design#19).
-# Eles são gerados por scripts/sync-edition-template.mjs — ver scripts/README.md.
+# Falha se os templates de edição (diária e mensal) forem editados à mão,
+# divergirem entre si ou apontarem para imagem remota/ausente
+# (diaria-design#19, #21). Eles são gerados por scripts/sync-edition-template.mjs
+# — ver scripts/README.md.
 
 on:
   pull_request:
     paths:
       - 'Diar.ia Edição.html'
       - 'Diar.ia Email Template.html'
+      - 'Diar.ia Edição Mensal.html'
       - 'assets/edition/**'
+      - 'assets/edition-monthly/**'
       - 'scripts/sync-edition-template.mjs'
   workflow_dispatch:
 
