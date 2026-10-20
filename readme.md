@@ -116,8 +116,9 @@ de superfície web. Fonte da verdade: `diaria-studio/scripts/render-newsletter-h
 
 - **Superfícies (#3):** o e-mail é **branco** — card (`.container`) `#FFFFFF` sobre
   página `#FFFFFF`, **sem trilhos laterais**. O token `--paper` (#FBFAF6) e a
-  estrutura papel-sobre-bege seguem valendo na **web/mensal**, não no e-mail
-  diário (override email-only, diaria-studio#1943/#1945).
+  estrutura papel-sobre-bege seguem valendo na **web**, não no e-mail
+  diário nem no mensal (override email-only, diaria-studio#1943/#1945;
+  mensal conferido no render de produção, diaria-design#21).
 - **Underline de acento (#2):** manchetes/itens de lista usam
   `text-decoration: underline` + `text-decoration-color: var(--brand)`. Sublinha
   **todas as linhas** de um título multi-linha; o `border-bottom` (email-safe no
