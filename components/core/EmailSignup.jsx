@@ -1,7 +1,7 @@
 import React from 'react';
 
 /**
- * The Diar.ia subscribe field: a pill-shaped wrapper holding an email input
+ * The diar.ia.br subscribe field: a pill-shaped wrapper holding an email input
  * and an inline submit button. Two themes — `light` (on cream) and `dark`
  * (on ink). This is the site's signature conversion control.
  */

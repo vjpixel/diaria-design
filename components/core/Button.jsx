@@ -1,7 +1,7 @@
 import React from 'react';
 
 /**
- * Diar.ia primary control. Pill-shaped, sans-serif, four editorial variants.
+ * diar.ia.br primary control. Pill-shaped, sans-serif, four editorial variants.
  * - ink      filled near-black (primary CTA: Assinar, Ler edição)
  * - teal     filled brand accent (use on ink/dark surfaces)
  * - outline  hairline border, transparent fill (secondary: Entrar)

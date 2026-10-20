@@ -10,5 +10,5 @@ export interface LogoProps {
   style?: React.CSSProperties;
 }
 
-/** Live-text Diar.ia wordmark. For fixed assets prefer the SVG/PNG in assets/logo. */
+/** Live-text diar.ia.br wordmark. For fixed assets prefer the SVG/PNG in assets/logo. */
 export function Logo(props: LogoProps): JSX.Element;

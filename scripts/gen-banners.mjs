@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Banner/cover generation for Diar.ia social surfaces (#3577 — troca de tagline).
+// Banner/cover generation for diar.ia.br social surfaces (#3577 — troca de tagline).
 //
 // Generates every social cover PNG from parametric SVG layouts, rendered with
 // resvg. Follows the same philosophy as export-logos.mjs: the SVG layout in

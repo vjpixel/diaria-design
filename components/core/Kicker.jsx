@@ -2,7 +2,7 @@ import React from 'react';
 
 /**
  * Mono, uppercase, wide-tracked label. The connective tissue of the
- * Diar.ia layout — section eyebrows, meta lines, "● EDIÇÃO DE HOJE".
+ * diar.ia.br layout — section eyebrows, meta lines, "● EDIÇÃO DE HOJE".
  */
 export function Kicker({ children, accent = false, onDark = false, style = {}, ...rest }) {
   return (

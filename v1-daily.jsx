@@ -314,7 +314,7 @@ const V1Footer = () => (
     </div>
     <V1Rule style={{ background: 'rgba(244,239,226,0.2)', opacity: 1, marginTop: 64 }} />
     <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 24, fontFamily: v1Mono, fontSize: 11, color: 'rgba(244,239,226,0.5)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-      <span>© 2026 Diar.ia · São Paulo, Brasil</span>
+      <span>© 2026 diar.ia.br · São Paulo, Brasil</span>
       <span>Privacidade · Termos · Reportar abuso</span>
     </div>
   </section>

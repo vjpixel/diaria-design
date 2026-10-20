@@ -341,7 +341,7 @@ const V3Footer = () => (
       </div>
     </div>
     <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 96, paddingTop: 28, borderTop: '1px solid rgba(241,235,222,0.15)', fontFamily: v3Mono, fontSize: 11, color: 'rgba(241,235,222,0.5)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-      <span>© 2026 Diar.ia · São Paulo</span>
+      <span>© 2026 diar.ia.br · São Paulo</span>
       <span>Privacidade · Termos · Reportar abuso</span>
     </div>
   </section>

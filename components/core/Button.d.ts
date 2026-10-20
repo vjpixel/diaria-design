@@ -11,7 +11,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 /**
- * Diar.ia pill button. Primary actions use `ink`; `teal` is reserved for
+ * diar.ia.br pill button. Primary actions use `ink`; `teal` is reserved for
  * accent CTAs on dark surfaces; `outline`/`ghost` step down the hierarchy.
  */
 export function Button(props: ButtonProps): JSX.Element;

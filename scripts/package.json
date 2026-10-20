@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Reproducible PNG export for the Diar.ia logo assets, rendered from the canonical SVGs.",
+  "description": "Reproducible PNG export for the diar.ia.br logo assets, rendered from the canonical SVGs.",
   "scripts": {
     "export": "node export-logos.mjs",
     "check": "node export-logos.mjs --check",

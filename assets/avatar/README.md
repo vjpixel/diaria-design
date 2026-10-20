@@ -1,4 +1,4 @@
-# Avatar / favicon Diar.ia — "d.."
+# Avatar / favicon diar.ia.br — "d.."
 
 Set do avatar **d..** em círculo. Georgia bold (outlined), haste do "d"
 centralizada no círculo, pontos redondos equidistantes seguindo à direita.

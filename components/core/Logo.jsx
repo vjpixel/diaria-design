@@ -1,7 +1,7 @@
 import React from 'react';
 
 /**
- * The Diar.ia wordmark as live text. Geist 600, tight tracking, with the
+ * The diar.ia.br wordmark as live text. Geist 600, tight tracking, with the
  * dots and `.br` always in brand teal. Renders "diar.ia.br" by default;
  * pass `tld={false}` to drop the `.br`.
  */
