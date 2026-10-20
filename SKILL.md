@@ -1,6 +1,6 @@
 ---
 name: diaria-design
-description: Use this skill to generate well-branded interfaces and assets for Diar.ia (a Brazilian daily AI-news newsletter with an editorial, newspaper-style identity — cream paper, ink black, a single teal accent, big serif headlines), for production or for throwaway prototypes/mocks/decks. Contains the brand's colors, type, fonts, logo assets, and reusable UI components.
+description: Use this skill to generate well-branded interfaces and assets for diar.ia.br (a Brazilian daily AI-news newsletter with an editorial, newspaper-style identity — cream paper, ink black, a single teal accent, big serif headlines), for production or for throwaway prototypes/mocks/decks. Contains the brand's colors, type, fonts, logo assets, and reusable UI components.
 user-invocable: true
 ---
 
@@ -17,12 +17,16 @@ foundations, and iconography. Then explore the rest:
 
 If creating visual artifacts (slides, mocks, throwaway prototypes), copy assets out and
 build static HTML for the user to view. If working on production code, copy assets and
-read the rules here to design as a Diar.ia brand expert.
+read the rules here to design as a diar.ia.br brand expert.
 
 Hold the line on the brand: editorial/newspaper voice in Brazilian Portuguese, sentence-
 case headlines with MONO UPPERCASE kickers, italics (often teal) for emphasis, flat
 paper surfaces with hairline rules instead of shadows, pill buttons/inputs, teal used
 sparingly. No gradients, no emoji, no decorative icons or stats.
+
+The daily email (and its web mirror, the same HTML) is pure white `#FFFFFF` with no
+beige frame: paper and beige appear only inside the boxes. Paper-on-beige surfaces are
+for the web (see "Convenções de e-mail" in `readme.md`).
 
 If the user invokes this skill without further guidance, ask what they want to build,
 ask a few focused questions, and act as an expert designer outputting HTML artifacts or

@@ -1,10 +1,10 @@
-# Diar.ia — Design System
+# diar.ia.br — Design System
 
 > Newsletter diária sobre IA, em português. "Seu filtro no caos de notícias sobre IA."
 > Identidade **editorial de jornal**: papel quase-branco quente, tinta preta, um teal de destaque,
 > serifa grande para as manchetes.
 
-Este projeto é a **fonte da verdade** da marca Diar.ia. Quem for criar slides, e-mails,
+Este projeto é a **fonte da verdade** da marca diar.ia.br. Quem for criar slides, e-mails,
 landing pages, posts ou telas de produto deve partir daqui: os tokens (cores, fontes,
 espaçamento), os componentes e os arquivos de logo.
 
@@ -16,7 +16,7 @@ valores fixos.
 
 ## O produto
 
-Diar.ia é uma **newsletter diária** (segunda a sexta) que faz curadoria e resume as
+A diar.ia.br é uma **newsletter diária** (segunda a sexta) que faz curadoria e resume as
 principais pesquisas, lançamentos e notícias de inteligência artificial — pensada para
 ser lida em **5 minutos**. Além da edição diária, mantém dois "cadernos especiais":
 uma estante de **livros sobre IA** e uma lista de **cursos gratuitos**.
@@ -57,9 +57,11 @@ C "Issue Nº", revista) — não são a marca oficial, ficam só como referênci
 ## Fundamentos visuais
 
 **Paleta.** Quatro cores. Nada de gradientes.
-- **Papel `#FBFAF6`** — fundo principal, quase branco com leve calor.
-- **Bege `#EBE5D0`** — o "tom silencioso": moldura e seções recuadas, preenchimento de
-  boxes e **todos os fios e bordas**. Preenche quando é área; vira fio quando é 1px.
+- **Papel `#FBFAF6`** — fundo principal na web, quase branco com leve calor. No e-mail
+  diário o fundo é branco `#FFFFFF` e o papel só aparece dentro das caixas (ver
+  "Convenções de e-mail").
+- **Bege `#EBE5D0`** — o "tom silencioso": moldura (só na web; o e-mail diário não tem)
+  e seções recuadas, preenchimento de boxes e **todos os fios e bordas**. Preenche quando é área; vira fio quando é 1px.
 - **Tinta `#171411`** — todo o texto sobre claro e o fundo do rodapé. Sem cinzas
   secundários: a hierarquia vem de **tamanho, peso, caixa-alta e itálico**.
 - **Teal `#00A0A0`** — único acento: pontos da wordmark, `.br`, links, kickers e marcas.

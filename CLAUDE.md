@@ -1,6 +1,6 @@
-# Diar.ia — Design System (memória de projeto p/ Claude Code)
+# diar.ia.br — Design System (memória de projeto p/ Claude Code)
 
-Este repositório **é** o design system da Diar.ia — a fonte da verdade da marca
+Este repositório **é** o design system da diar.ia.br — a fonte da verdade da marca
 (newsletter brasileira diária de notícias de IA; identidade editorial de jornal).
 Quem for criar e-mails, slides, landing pages, posts ou telas deve **partir daqui**.
 

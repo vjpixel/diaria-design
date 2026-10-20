@@ -1,4 +1,4 @@
-**EmailSignup** — the Diar.ia subscribe control: a pill wrapper with an email input and inline submit button. The product's primary conversion element.
+**EmailSignup** — the diar.ia.br subscribe control: a pill wrapper with an email input and inline submit button. The product's primary conversion element.
 
 ```jsx
 <EmailSignup onSubmit={subscribe} />

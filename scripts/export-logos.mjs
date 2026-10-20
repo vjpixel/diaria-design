@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Logo PNG export + structural check for Diar.ia.
+// Logo PNG export + structural check for diar.ia.br.
 //
 // `export` renders every PNG under assets/logo/png (and the logo/ mirror)
 // directly from the canonical SVGs in assets/logo. The brand face is

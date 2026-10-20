@@ -366,7 +366,7 @@ const M1Footer = () => (
       <M1Kicker size={9} color="rgba(244,239,226,0.5)">Cancele</M1Kicker>
     </div>
     <div style={{ marginTop: 48, paddingTop: 24, borderTop: '1px solid rgba(244,239,226,0.15)', fontFamily: m1Mono, fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(244,239,226,0.5)', display: 'flex', flexDirection: 'column', gap: 6 }}>
-      <span>© 2026 Diar.ia · São Paulo</span>
+      <span>© 2026 diar.ia.br · São Paulo</span>
       <span>Privacidade · Termos · Reportar</span>
     </div>
   </section>

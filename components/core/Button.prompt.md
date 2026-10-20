@@ -1,4 +1,4 @@
-**Button** — Diar.ia's pill-shaped action control; use `ink` for the primary CTA, step down to `outline`/`ghost` for secondary actions, and `teal` only on dark surfaces.
+**Button** — diar.ia.br's pill-shaped action control; use `ink` for the primary CTA, step down to `outline`/`ghost` for secondary actions, and `teal` only on dark surfaces.
 
 ```jsx
 <Button variant="ink">Assinar grátis</Button>

@@ -1,8 +1,8 @@
-// Shared Diar.ia content for all layout variations.
+// Shared diar.ia.br content for all layout variations.
 // Cover images point at beehiiv's public CDN so mockups feel real.
 window.DiariaData = {
   brand: {
-    name: 'Diar.ia',
+    name: 'diar.ia.br',
     tagline: 'Seu filtro no caos de notícias sobre IA.',
     description: 'Um resumo diário das principais pesquisas, notícias, tendências e insights, para ler em 5 minutos, se manter atualizado e usar IA melhor.',
     stats: { readers: '12.4k', issues: 412, retention: '94%' },

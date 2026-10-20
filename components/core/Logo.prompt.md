@@ -1,4 +1,4 @@
-**Logo** — the Diar.ia wordmark rendered as live text (Geist 600), with the dots and `.br` in brand teal.
+**Logo** — the diar.ia.br wordmark rendered as live text (Geist 600), with the dots and `.br` in brand teal.
 
 ```jsx
 <Logo size={20} />
