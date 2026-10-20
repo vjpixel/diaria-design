@@ -33,10 +33,12 @@
 //      (nome estável por hash do URL) e reescreve o src para o caminho local;
 //      aborta se sobrar qualquer imagem remota que o padrão não cobriu (srcset,
 //      url(), aspas simples...) — o DS não pode depender do host de imagens;
-//   2. troca as merge tags conhecidas (e-mail do leitor, link de descadastro)
-//      por valores de exemplo e ABORTA em qualquer outra tag ({{...}}, {%...%})
+//   2. troca as merge tags conhecidas DO CANAL do template (diária: Beehiiv/Kit;
+//      mensal: Brevo — e-mail do leitor, link de descadastro) por valores de
+//      exemplo e ABORTA em qualquer outra tag ({{...}}, {%...%})
 //      — nunca descarta em silêncio algo que muda o conteúdo;
-//   3. grava o(s) template(s) com o cabeçalho "GERADO por ...";
+//   3. confere a forma do documento (o mesmo contrato do --check) e grava o(s)
+//      template(s), atomicamente, com o cabeçalho "GERADO por ...";
 //   4. remove da pasta de assets só as IMAGENS GERADAS por este script
 //      (padrão `--<8 hex>.<ext>`) que nenhum template referencia, listando
 //      cada uma. Outros arquivos da pasta nunca são tocados.
@@ -49,33 +51,40 @@ import { fileURLToPath } from "node:url";
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const GENERATED_MARK = "GERADO por scripts/sync-edition-template.mjs";
 
+const SAMPLE_EMAIL = "leitor@exemplo.com";
+const SAMPLE_UNSUBSCRIBE = "#descadastrar";
+
+// Merge tags conhecidas → valor de exemplo, POR TARGET: cada template aceita só
+// as tags do seu canal e aborta em qualquer outra (nunca descarta em silêncio).
 const TARGETS = {
   daily: {
     label: "diária",
+    // `{{email}}` (Beehiiv) e `subscriber.*` (Kit, Liquid).
+    tags: [[/\{\{\s*(?:email|subscriber\.email_address|subscriber\.email)\s*\}\}/g, SAMPLE_EMAIL]],
     outputs: ["Diar.ia Email Template.html", "Diar.ia Edição.html"],
     assetSubdir: "edition",
     // Forma mínima de um template gerado: documento HTML5 + o card do renderer.
     shape: (d) => /^<!doctype html>/i.test(d) && /class="container"/.test(d),
+    shapeHint: "<!doctype html> no início + .container",
   },
   monthly: {
     label: "mensal",
+    // Brevo: `contact.EMAIL` e o link de descadastro, que vira uma âncora local inerte.
+    tags: [
+      [/\{\{\s*contact\.EMAIL\s*\}\}/g, SAMPLE_EMAIL],
+      [/\{\{\s*unsubscribe\s*\}\}/g, SAMPLE_UNSUBSCRIBE],
+    ],
     outputs: ["Diar.ia Edição Mensal.html"],
     assetSubdir: "edition-monthly",
     // O e-mail mensal sai em XHTML 1.0 Transitional (wrapEmail), com o canvas `.ds-canvas`.
     shape: (d) => /^<!doctype html[\s>]/i.test(d) && /class="ds-canvas"/.test(d),
+    shapeHint: "<!DOCTYPE html …> no início + .ds-canvas",
   },
 };
 
-const SAMPLE_EMAIL = "leitor@exemplo.com";
-const SAMPLE_UNSUBSCRIBE = "#descadastrar";
-// Merge tags conhecidas → valor de exemplo. `{{email}}` (Beehiiv),
-// `subscriber.*` (Kit, Liquid), `contact.EMAIL` (Brevo); `{{ unsubscribe }}` é
-// o link de descadastro da Brevo, que vira uma âncora local inerte.
-const TAG_REPLACEMENTS = [
-  [/\{\{\s*(?:email|subscriber\.email_address|subscriber\.email|contact\.EMAIL)\s*\}\}/g, SAMPLE_EMAIL],
-  [/\{\{\s*unsubscribe\s*\}\}/g, SAMPLE_UNSUBSCRIBE],
-];
-const replaceKnownTags = (html) => TAG_REPLACEMENTS.reduce((h, [re, v]) => h.replace(re, v), html);
+const replaceKnownTags = (html, t) => t.tags.reduce((h, [re, v]) => h.replace(re, v), html);
+// Qualquer merge tag (ou sua forma URL-encoded) — mesmo regex no sync e no --check.
+const ANY_TAG = /\{\{[^}]*\}\}|\{%[^%]*%\}|%7B%7B|%7B%25/gi;
 // Sufixo `--<8 hex>` (traço DUPLO) marca arquivo gerado — não colide com datas
 // tipo `capa-20261009.jpg` que alguém ponha à mão na pasta.
 const GENERATED_ASSET = /--[0-9a-f]{8}\.(?:jpe?g|png|webp|gif)$/i;
@@ -123,7 +132,7 @@ function checkTarget(t) {
     if (!t.shape(d)) problems.push(`${t.outputs[i]} não tem a forma de um template gerado`);
     if (!d.includes(GENERATED_MARK)) problems.push(`${t.outputs[i]} sem o cabeçalho de arquivo gerado`);
     for (const r of remoteImageRefs(d)) problems.push(`${t.outputs[i]}: imagem remota ${r}`);
-    if (/\{\{|\{%/.test(d)) problems.push(`${t.outputs[i]}: merge tag não resolvida`);
+    if (d.match(ANY_TAG)) problems.push(`${t.outputs[i]}: merge tag não resolvida`);
     for (const r of localAssetRefs(d, t.assetSubdir)) refs.add(r);
   });
   for (const r of refs) if (!existsSync(join(assetDir, r))) problems.push(`assets/${t.assetSubdir}/${r} referenciado mas ausente`);
@@ -175,6 +184,9 @@ if (!edition) {
 }
 
 let body = readFileSync(input, "utf8");
+// Caminho REAL da entrada para o cabeçalho: relativo ao diaria-studio quando
+// vier de lá (sem o home de quem rodou), senão o basename.
+const inputLabel = resolve(input).match(/(data\/monthly\/[^/]+\/_internal\/[^/]+)$/)?.[1] ?? basename(input);
 if (monthly) {
   if (!/<html[\s>]/i.test(body) || !/<head>/i.test(body)) die("a entrada mensal precisa ser o documento completo do e-mail (cloudflare-preview.html)");
   if (!/class="ds-canvas"/.test(body)) die("a entrada não parece um render do monthly-render.ts (sem .ds-canvas)");
@@ -201,7 +213,7 @@ const rawUrls = [...new Set([...body.matchAll(/<img\b[^>]*\bsrc="(https?:\/\/[^"
 if (rawUrls.length === 0) die(`nenhuma <img> remota na entrada — render inesperado, abortando antes de mexer em assets/${target.assetSubdir}/`);
 
 // Valida tags e imagens não-cobertas ANTES de baixar/escrever qualquer coisa.
-const unknownTags = replaceKnownTags(body).match(/\{\{[^}]*\}\}|\{%[^%]*%\}|%7B%7B|%7B%25/gi);
+const unknownTags = replaceKnownTags(body, target).match(ANY_TAG);
 if (unknownTags) die(`merge tags não tratadas: ${[...new Set(unknownTags)].join(", ")}`);
 const uncovered = remoteImageRefs(rawUrls.reduce((h, u) => h.split(`src="${u}"`).join('src=""'), body));
 if (uncovered.length) die(`imagens remotas que o script não cobre: ${uncovered.join(", ")}`);
@@ -242,7 +254,7 @@ for (const raw of rawUrls) {
 if (remoteImageRefs(body).length) die("imagem remota restante após a reescrita — bug no script");
 
 // ---------- 2. merge tags (desconhecidas já barradas acima) ----------
-body = replaceKnownTags(body);
+body = replaceKnownTags(body, target);
 
 // ---------- 3. documento completo ----------
 let doc;
@@ -251,7 +263,7 @@ if (monthly) {
   ${GENERATED_MARK} --monthly a partir do render de produção
   do diaria-studio (draftToEmail em scripts/lib/mensal/monthly-render.ts),
   ciclo ${edition}: o e-mail mensal da Clarice News (Brevo), arquivo
-  data/monthly/${edition}/_internal/cloudflare-preview.html.
+  ${inputLabel}.
   Variante escolhida (diaria-design#21): este e-mail, não o e-mail Kit dos
   apoiadores (mesma base, merge tag Liquid) nem a página web da Retrospectiva.
   Merge tags trocadas por exemplos (${SAMPLE_EMAIL}, ${SAMPLE_UNSUBSCRIBE}).
@@ -292,7 +304,17 @@ const orphans = readdirSync(ASSET_DIR).filter(
   (f) => GENERATED_ASSET.test(f) && !kept.has(f) && statSync(join(ASSET_DIR, f)).isFile(),
 );
 
-for (const out of target.outputs) writeFileSync(join(ROOT, out), doc);
+// Mesmo contrato do --check, antes de gravar: uma entrada com BOM/comentário
+// antes do doctype não pode virar template que só o CI reprova.
+if (!target.shape(doc)) die(`o documento gerado não tem a forma de um template ${target.label} (${target.shapeHint}) — entrada inesperada (BOM/comentário antes do doctype?), template não gravado`);
+if (!doc.includes(GENERATED_MARK)) die("o documento gerado ficou sem o cabeçalho de gerado — bug no script, template não gravado");
+
+// Escrita atômica (tmp + rename), como as imagens.
+for (const out of target.outputs) {
+  const dest = join(ROOT, out);
+  writeFileSync(`${dest}.tmp`, doc);
+  renameSync(`${dest}.tmp`, dest);
+}
 for (const f of orphans) {
   unlinkSync(join(ASSET_DIR, f));
   console.log(`removida ${assetPath(f)}`);
