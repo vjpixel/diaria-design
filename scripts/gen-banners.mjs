@@ -23,6 +23,8 @@
 //     banner desktop: largura OBRIGATÓRIA 1920px, recomendado 1920×400
 //     banner mobile:  largura OBRIGATÓRIA 1250px, recomendado 1250×400
 //     (altura é livre; cor de fundo do banner configurável na UI — usar PAPER #FFFFFF)
+//   YouTube channel banner  upload 2560×1440 (TV); área segura visível em TODO
+//     dispositivo = 1546×423 centralizada (desktop/mobile recortam o resto)
 //
 // Usage:  node gen-banners.mjs [--only facebook] [--out <dir>]
 //         node gen-banners.mjs --check     # structural invariants only (CI, no fonts needed)
@@ -87,6 +89,10 @@ export const BANNERS = [
   // conteúdo nessa zona (tudo fica centralizado ou no topo/direita) — sem
   // offset especial necessário em nenhum caso.
   { key: 'linkedin-pessoal', file: 'linkedin-cover-pessoal-3168x792.png', w: 3168, h: 792, layout: 'centered', bg: PAPER },
+  // YouTube (261021): arte no canvas da área segura 1546×423 e `pad` branco até
+  // 2560×1440 — mesmo mecanismo do LinkedIn empresa. Desktop e mobile só
+  // mostram a faixa central; a TV mostra o canvas inteiro (fundo branco).
+  { key: 'youtube', file: 'youtube-banner-2560x1440.png', w: 1546, h: 423, layout: 'centered', bg: PAPER, pad: { w: 2560, h: 1440 } },
   { key: 'twitter', file: 'twitter-header-1500x500.png', w: 1500, h: 500, layout: 'centered', bg: PAPER },
   { key: 'apoiase', file: 'apoiase-cover-4800x900.png', w: 4800, h: 900, layout: 'dark', bg: INK },
   { key: 'umapenca-desktop', file: 'umapenca-banner-desktop-1920x400.png', w: 1920, h: 400, layout: 'centered', bg: PAPER },
